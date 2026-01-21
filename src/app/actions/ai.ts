@@ -22,21 +22,29 @@ export async function generateOutfit(prevState: any, formData: FormData) {
       where: eq(clothingItems.userId, session.userId)
   })
 
-  // Get Recent History (Last 3 days)
-  const threeDaysAgo = new Date();
-  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-  const dateString = threeDaysAgo.toISOString().split('T')[0];
+  // Get Recent History (Last 7 days for better rotation)
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const dateString = sevenDaysAgo.toISOString().split('T')[0];
 
   const recentHistory = await db.query.histories.findMany({
       where: and(
           eq(histories.userId, session.userId),
           gte(histories.date, dateString)
       ),
-      columns: { combo: true } // Only need the combo
+      columns: { combo: true, date: true }
   })
 
-  const recentItems = recentHistory.flatMap(h => (h.combo as any).items || [])
-  const recentItemsString = recentItems.join(', ');
+  // Basic "Do not repeat" list (last 3 days)
+  const threeDaysAgo = new Date();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+  const threeDaysAgoStr = threeDaysAgo.toISOString().split('T')[0];
+  
+  const extremelyRecentItems = recentHistory
+    .filter(h => h.date >= threeDaysAgoStr)
+    .flatMap(h => (h.combo as any).items || []);
+
+  const recentItemsString = extremelyRecentItems.join(', ');
 
   // Get Weather
   const weather = await getWeather()
@@ -52,12 +60,12 @@ export async function generateOutfit(prevState: any, formData: FormData) {
   const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.style})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
   
   const prompt = `
-    Bạn là stylist cá nhân thân thiện, tinh tế.
+    Bạn là stylist cá nhân thân thiện, tinh tế và nói chuyện rất đời thường.
     
     Tủ đồ của người dùng:
     ${clothingList}
     
-    Các món đã mặc gần đây (HẠN CHẾ LẶP LẠI trọn bộ, có thể mix lại nếu cần thiết nhưng hãy ưu tiên món khác):
+    Các món ĐÃ MẶC trong 3 ngày qua (TRÁNH LẶP LẠI các món này nếu có thể, trừ khi rất cần thiết):
     ${recentItemsString}
 
     Ngữ cảnh:
@@ -70,9 +78,18 @@ export async function generateOutfit(prevState: any, formData: FormData) {
     - Đề xuất 1 bộ trang phục phối hợp.
     - ƯU TIÊN sử dụng các món đồ có đánh dấu [YÊU THÍCH] nếu phù hợp.
     - CHỈ sử dụng đồ có trong Tủ đồ của người dùng.
-    - Ngôn ngữ: Nhẹ nhàng, gợi mở (Ví dụ: "Bạn thử kết hợp...", "Combo này khá hợp với..."). Tránh khẳng định cứng nhắc ("Đây là bộ tốt nhất").
-    - Giải thích: Ngắn gọn, tích cực (1-2 câu).
-    - Trả về JSON ONLY: { "items": ["Tên chính xác từ danh sách", "Tên chính xác 2"], "reason": "Lý do..." }
+    - NẾU có món đồ nào lâu rồi chưa mặc (không nằm trong danh sách "ĐÃ MẶC"), hãy ưu tiên gợi ý nó thử xem.
+    
+    Tông giọng & Ngôn ngữ:
+    - Nhẹ nhàng, gợi mở (Ví dụ: "Bạn thử kết hợp...", "Combo này khá hợp với...", "Hay là thử..."). 
+    - TRÁNH khẳng định cứng nhắc 100% ("Đây là bộ tốt nhất", "Chắc chắn đẹp").
+    - Dùng từ ngữ đời thường, ngắn gọn.
+    
+    Giải thích: 
+    - CỰC KỲ NGẮN GỌN (1-2 câu).
+    - Tập trung vào cảm giác hoặc lý do thực tế (ví dụ: "chất vải này mát", "màu này tôn da").
+
+    Trả về JSON ONLY: { "items": ["Tên chính xác từ danh sách", "Tên chính xác 2"], "reason": "Lý do..." }
   `
 
   let resultJson = null;

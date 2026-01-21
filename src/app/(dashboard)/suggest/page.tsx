@@ -35,14 +35,41 @@ export default function SuggestPage() {
                  </Link>
              </div>
              
-             {!state?.success && (
+             {/* LOADING STATE - SKELETON UI */}
+             {isPending && (
+                <div className="space-y-6 animate-in fade-in duration-500">
+                    <div className="flex flex-col items-center justify-center py-10 space-y-4">
+                        <div className="relative">
+                            <div className="w-20 h-20 rounded-full bg-rose-50 border-2 border-rose-100 flex items-center justify-center animate-pulse">
+                                <Sparkles className="w-10 h-10 text-rose-300" />
+                            </div>
+                            <div className="absolute inset-0 rounded-full border-t-2 border-rose-400 animate-spin"></div>
+                        </div>
+                        <p className="text-center font-medium text-foreground/80 animate-pulse">
+                            Đang chọn đồ phù hợp với thời tiết hôm nay cho bạn...
+                        </p>
+                    </div>
+                    {/* Fake Skeleton Card */}
+                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-border/50 space-y-4 opacity-50 pointer-events-none">
+                        <div className="h-8 bg-muted/50 rounded-md w-3/4"></div>
+                        <div className="space-y-3 pt-4">
+                            <div className="h-6 bg-muted/30 rounded-md w-full"></div>
+                            <div className="h-6 bg-muted/30 rounded-md w-5/6"></div>
+                            <div className="h-6 bg-muted/30 rounded-md w-4/6"></div>
+                        </div>
+                    </div>
+                </div>
+             )}
+
+             {/* FORM STATE (Only show when not loading and not success) */}
+             {!isPending && !state?.success && (
                 <div className="space-y-8 animate-in fade-in duration-700">
                     <div className="text-center space-y-2">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-50 border-2 border-rose-100 shadow-sm mb-2 text-rose-500">
-                            <Sparkles className="w-8 h-8" strokeWidth={1.5} />
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-50 border-2 border-rose-100 shadow-sm mb-2 text-rose-500">
+                            <Sparkles className="w-10 h-10" strokeWidth={1.5} />
                         </div>
                         <h1 className="text-2xl font-bold tracking-tight">Thần thái đại nhân</h1>
-                        <p className="text-muted-foreground text-sm">Đi đâu mà vội mà vàng? Hỏi tui cái đã!</p>
+                        <p className="text-muted-foreground text-sm px-4">Đừng để ngày trôi qua nhạt nhòa. <br/>Hôm nay bạn muốn mặc style gì nè? ✨</p>
                     </div>
 
                     <form action={action} className="space-y-6">
@@ -68,15 +95,16 @@ export default function SuggestPage() {
                             </div>
                         </div>
 
-                        <Button className="w-full h-12 text-base rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold" disabled={isPending}>
-                            {isPending ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Đang vận nội công...</> : 'Biến hình! 🧚‍♀️'}
+                        <Button className="w-full h-14 text-lg rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all hover:scale-[1.02]" disabled={isPending}>
+                            Biến hình! 🧚‍♀️
                         </Button>
                         {state?.error && <p className="text-destructive text-center text-sm font-medium bg-destructive/10 p-3 rounded-lg">{state.error}</p>}
                     </form>
                 </div>
              )}
 
-             {state?.success && state.suggestion && (
+             {/* RESULT STATE */}
+             {!isPending && state?.success && state.suggestion && (
                  <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-700">
                      <div className="bg-white p-6 rounded-[2rem] shadow-soft border border-border/50 relative overflow-hidden">
                          
@@ -113,10 +141,10 @@ export default function SuggestPage() {
                      </div>
 
                      <div className="flex flex-col gap-3">
-                         <Button className="w-full h-14 rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg" onClick={handleSave} disabled={saving}>
+                         <Button className="w-full h-14 rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg transition-transform active:scale-95" onClick={handleSave} disabled={saving}>
                              {saving ? <Loader2 className="mr-2 h-5 w-5 animate-spin"/> : '✅ Mình sẽ mặc bộ này'}
                          </Button>
-                         <Button variant="ghost" className="w-full h-12 rounded-full font-medium text-muted-foreground hover:text-foreground" onClick={() => window.location.reload()}>
+                         <Button variant="ghost" className="w-full h-12 rounded-full font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50" onClick={() => window.location.reload()}>
                              Gợi ý khác ↻
                          </Button>
                      </div>

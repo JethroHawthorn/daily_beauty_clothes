@@ -95,11 +95,11 @@ export default async function HistoryPage() {
                         <History className="w-10 h-10 text-muted-foreground" />
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-muted-foreground">Sổ tay chưa có gì cả</h3>
-                    <p className="text-muted-foreground/70 text-sm max-w-xs mx-auto">
-                        Từ hôm nay, mình sẽ giúp bạn nhớ đã mặc gì mỗi ngày nha
+                    <p className="text-muted-foreground/70 text-sm max-w-xs mx-auto mb-8">
+                        Thêm vài món đồ để mình gợi ý cho bạn nhé 💗
                     </p>
-                    <Link href="/suggest" className="mt-8 inline-block">
-                        <Button className="rounded-full shadow-soft font-bold">Hỏi Thần thái đại nhân</Button>
+                    <Link href="/wardrobe/add" className="inline-block">
+                        <Button className="rounded-full shadow-soft font-bold px-8">Thêm món đầu tiên</Button>
                     </Link>
                 </div>
             )}
