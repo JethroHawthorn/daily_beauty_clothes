@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 👗 Daily Beauty Clothes
 
-## Getting Started
+> **Ứng dụng PWA quản lý tủ đồ & gợi ý phối đồ bằng AI**
 
-First, run the development server:
+Ứng dụng giúp bạn quản lý tủ quần áo cá nhân và nhận gợi ý phối đồ thông minh dựa trên thời tiết và mục đích sử dụng.
+
+## ✨ Tính năng
+
+- 🔐 **Đăng nhập nhanh** - Đăng nhập bằng số điện thoại
+- 👕 **Quản lý tủ đồ** - Thêm, xem, xóa quần áo với hình ảnh
+- 🤖 **Gợi ý AI** - Phối đồ thông minh với Google Gemini
+- 🌤️ **Tích hợp thời tiết** - Gợi ý phù hợp với thời tiết hiện tại
+- 📅 **Lịch sử** - Xem lại các bộ đồ đã mặc
+- 📱 **PWA** - Cài đặt như ứng dụng native
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Styling | Tailwind CSS + shadcn/ui |
+| Database | Turso (LibSQL) + Drizzle ORM |
+| AI | Google Gemini API |
+| Weather | WeatherAPI.com |
+| Auth | JWT (jose) |
+
+## 🚀 Bắt đầu
+
+### 1. Clone và cài đặt
+
+```bash
+git clone https://github.com/JethroHawthorn/daily_beauty_clothes.git
+cd daily_beauty_clothes
+npm install
+```
+
+### 2. Cấu hình môi trường
+
+Tạo file `.env` từ template:
+
+```bash
+cp env.example .env
+```
+
+Điền các API keys:
+
+```env
+TURSO_URL=libsql://your-database.turso.io
+TURSO_TOKEN=your_turso_auth_token
+GEMINI_API_KEY=your_google_gemini_key
+WEATHER_API_KEY=your_weatherapi_key
+```
+
+### 3. Khởi tạo database
+
+```bash
+npx drizzle-kit push
+```
+
+### 4. Chạy development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Cấu trúc dự án
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── (auth)/login/      # Trang đăng nhập
+│   ├── (dashboard)/
+│   │   ├── wardrobe/      # Quản lý tủ đồ
+│   │   ├── suggest/       # Gợi ý phối đồ
+│   │   └── history/       # Lịch sử
+│   └── actions/           # Server Actions
+├── components/ui/         # shadcn/ui components
+├── db/schema.ts          # Database schema
+└── lib/                  # Utilities
+```
 
-## Learn More
+## 🔑 API Keys
 
-To learn more about Next.js, take a look at the following resources:
+| Service | Link đăng ký |
+|---------|-------------|
+| Turso | [turso.tech](https://turso.tech) |
+| Google Gemini | [aistudio.google.com](https://aistudio.google.com) |
+| WeatherAPI | [weatherapi.com](https://weatherapi.com) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📝 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+MIT
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Made with ❤️ using Next.js & AI
