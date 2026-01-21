@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-import { Loader2, ArrowLeft, Shirt } from 'lucide-react'
+import { Loader2, ArrowLeft, Shirt, Sparkles, Quote } from 'lucide-react'
 import Link from 'next/link'
 
 export default function SuggestPage() {
@@ -38,8 +38,8 @@ export default function SuggestPage() {
              {!state?.success && (
                 <div className="space-y-8 animate-in fade-in duration-700">
                     <div className="text-center space-y-2">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-50 border-2 border-rose-100 shadow-sm mb-2">
-                            <span className="text-3xl">✨</span>
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-50 border-2 border-rose-100 shadow-sm mb-2 text-rose-500">
+                            <Sparkles className="w-8 h-8" strokeWidth={1.5} />
                         </div>
                         <h1 className="text-2xl font-bold tracking-tight">Thần thái đại nhân</h1>
                         <p className="text-muted-foreground text-sm">Đi đâu mà vội mà vàng? Hỏi tui cái đã!</p>
@@ -103,8 +103,10 @@ export default function SuggestPage() {
                          </div>
 
                          <div className="bg-muted/30 p-5 rounded-xl relative">
-                             <div className="absolute -top-3 -left-2 text-4xl opacity-10">❝</div>
-                             <p className="text-foreground/80 italic leading-relaxed relative z-10 text-sm">
+                             <div className="absolute -top-2 -left-2 text-muted-foreground/20">
+                                <Quote className="w-6 h-6 rotate-180" />
+                             </div>
+                             <p className="text-foreground/80 italic leading-relaxed relative z-10 text-sm px-2">
                                  {state.suggestion.reason}
                              </p>
                          </div>

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 // import { Card, CardContent, CardFooter } from '@/components/ui/card' // unused
 import Image from 'next/image'
-import { Trash2, Plus, ArrowLeft } from 'lucide-react'
+import { Trash2, Plus, ArrowLeft, Shirt, ShoppingBag, ImageOff } from 'lucide-react'
 import { FavoriteButton } from '@/components/favorite-button'
 
 import { WardrobeFilters } from '@/components/wardrobe-filters'
@@ -33,8 +33,11 @@ export default async function WardrobePage({ searchParams }: Props) {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Lãnh địa quần áo 👗</h1>
+                 <div className='flex items-center gap-2'>
+                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                        <Shirt className="w-6 h-6" />
+                    </div>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Lãnh địa quần áo</h1>
                  </div>
                  <Link href="/wardrobe/add">
                     <Button className="rounded-full shadow-soft hover:shadow-soft-hover bg-primary text-primary-foreground font-semibold px-4 h-9 text-sm">
@@ -47,8 +50,8 @@ export default async function WardrobePage({ searchParams }: Props) {
 
             {items.length === 0 ? (
                 <div className="text-center py-20 px-4 animate-in zoom-in duration-500">
-                    <div className="w-40 h-40 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft-hover">
-                         <span className="text-6xl">🛍️</span>
+                    <div className="w-40 h-40 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft-hover text-pink-500">
+                         <ShoppingBag className="w-20 h-20" strokeWidth={1.5} />
                     </div>
                     <h3 className="text-2xl font-bold mb-3 text-foreground">Tủ đồ chưa có gì nè</h3>
                     <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
@@ -68,7 +71,9 @@ export default async function WardrobePage({ searchParams }: Props) {
                                {item.imageUrl ? (
                                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                                ) : (
-                                   <div className="flex items-center justify-center h-full text-muted-foreground/30 text-2xl">📷</div>
+                                   <div className="flex items-center justify-center h-full text-muted-foreground/30">
+                                       <ImageOff className="w-10 h-10" strokeWidth={1.5} />
+                                   </div>
                                )}
                                
                                <div className="absolute top-2 right-2 z-10">

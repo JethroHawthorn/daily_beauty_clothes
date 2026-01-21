@@ -1,7 +1,7 @@
 import { getHistory } from '@/app/actions/history'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, CalendarHeart, Calendar, History, Cloud, CloudSun, Sun } from 'lucide-react'
 
 
 export default async function HistoryPage() {
@@ -28,8 +28,11 @@ export default async function HistoryPage() {
             </div>
             
             <div className="mb-8 flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Hành trình nhan sắc 📅</h1>
+                <div className='flex items-center gap-2'>
+                    <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
+                        <CalendarHeart className="w-6 h-6" />
+                    </div>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Hành trình nhan sắc</h1>
                 </div>
             </div>
 
@@ -42,8 +45,8 @@ export default async function HistoryPage() {
                 {Object.entries(groupedHistory).map(([date, items]) => (
                     <div key={date} className="relative">
                         <div className="flex items-center mb-4">
-                            <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center border-4 border-background shadow-sm z-10">
-                                <span className="text-lg">📅</span>
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-2 border-primary/20 shadow-sm z-10 text-primary">
+                                <Calendar className="w-5 h-5" />
                             </div>
                             <h2 className="ml-4 font-semibold text-foreground/80 capitalize">{date}</h2>
                         </div>
@@ -89,7 +92,7 @@ export default async function HistoryPage() {
              {history.length === 0 && (
                 <div className="text-center py-20 px-4 animate-in fade-in duration-500">
                      <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 opacity-50">
-                        <span className="text-4xl grayscale">🕰️</span>
+                        <History className="w-10 h-10 text-muted-foreground" />
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-muted-foreground">Sổ tay chưa có gì cả</h3>
                     <p className="text-muted-foreground/70 text-sm max-w-xs mx-auto">
