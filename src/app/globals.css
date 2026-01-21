@@ -54,7 +54,7 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 1.5rem;
   
   /* Dusty Rose - Light Theme */
   --background: #FFFCFB;
@@ -184,10 +184,10 @@
 
   /* Soft Shadows */
   .shadow-soft {
-    box-shadow: 0 4px 20px rgba(239, 166, 181, 0.15);
+    box-shadow: 0 4px 24px -2px rgba(239, 166, 181, 0.12);
   }
   .shadow-soft-hover {
-    box-shadow: 0 8px 25px rgba(239, 166, 181, 0.2);
+    box-shadow: 0 8px 32px -4px rgba(239, 166, 181, 0.2);
   }
   
   /* Gradients */
@@ -197,7 +197,9 @@
   
   /* Transitions */
   .transition-card {
-    @apply transition-all duration-300 ease-out;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
   }
   
   /* Tap Scale */

@@ -10,8 +10,8 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto p-4 max-w-md pb-20">
       <header className="mb-8 pt-6">
-         <h1 className="text-2xl font-bold text-foreground">Xin chào! 👋</h1>
-         <p className="text-muted-foreground text-sm mt-1">Hôm nay bạn muốn mặc gì?</p>
+         <h1 className="text-2xl font-bold text-foreground">Chào người đẹp! 💃</h1>
+         <p className="text-muted-foreground text-sm mt-1">Hôm nay diện gì cho thiên hạ trầm trồ đây?</p>
       </header>
       
       {/* Weather Widget */}
@@ -41,40 +41,36 @@ export default async function HomePage() {
           </CardContent>
       </Card>
 
-      <div className="flex flex-col gap-3">
-          <Link href="/suggest">
-            <Card className="shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-l-4 border-l-accent">
-                <CardHeader className="flex flex-row items-center gap-4 p-4">
-                    <div className="text-2xl bg-accent-light p-3 rounded-full">✨</div>
-                    <div className="flex flex-col">
-                        <CardTitle className="text-base font-semibold">Gợi ý phối đồ</CardTitle>
-                        <CardDescription className="text-sm">Để AI stylist chọn đồ giúp bạn</CardDescription>
+      <div className="grid grid-cols-2 gap-4">
+          <Link href="/suggest" className="col-span-2">
+            <Card className="h-full shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer bg-gradient-to-br from-accent-light to-white border-2 border-accent/20">
+                <CardContent className="flex flex-col items-center justify-center p-6 text-center h-full gap-3">
+                    <div className="text-4xl bg-white p-4 rounded-full shadow-sm">✨</div>
+                    <div>
+                        <CardTitle className="text-lg font-bold text-foreground">Gợi ý từ Thượng Đế</CardTitle>
+                        <CardDescription className="text-sm font-medium text-muted-foreground mt-1">Để AI stylist trổ tài biến hình</CardDescription>
                     </div>
-                </CardHeader>
+                </CardContent>
             </Card>
           </Link>
 
           <Link href="/wardrobe">
-            <Card className="shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-l-4 border-l-primary">
-                <CardHeader className="flex flex-row items-center gap-4 p-4">
-                    <div className="text-2xl bg-primary-light p-3 rounded-full">👕</div>
-                    <div className="flex flex-col">
-                         <CardTitle className="text-base font-semibold">Tủ đồ của tôi</CardTitle>
-                        <CardDescription className="text-sm">Quản lý quần áo</CardDescription>
-                    </div>
-                </CardHeader>
+            <Card className="h-full shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-2 border-primary/10 hover:border-primary/30 bg-primary-light/30">
+                <CardContent className="flex flex-col items-center justify-center p-5 text-center h-full gap-2">
+                    <div className="text-3xl mb-1">👕</div>
+                    <CardTitle className="text-base font-semibold">Kho báu</CardTitle>
+                    <CardDescription className="text-xs">Gia tài quần áo</CardDescription>
+                </CardContent>
             </Card>
           </Link>
 
           <Link href="/history">
-            <Card className="shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-l-4 border-l-secondary">
-                <CardHeader className="flex flex-row items-center gap-4 p-4">
-                    <div className="text-2xl bg-secondary-light p-3 rounded-full">📅</div>
-                    <div className="flex flex-col">
-                        <CardTitle className="text-base font-semibold">Lịch sử</CardTitle>
-                        <CardDescription className="text-sm">Xem lại trang phục đã mặc</CardDescription>
-                    </div>
-                </CardHeader>
+            <Card className="h-full shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-2 border-secondary/10 hover:border-secondary/30 bg-secondary-light/30">
+                <CardContent className="flex flex-col items-center justify-center p-5 text-center h-full gap-2">
+                    <div className="text-3xl mb-1">📅</div>
+                    <CardTitle className="text-base font-semibold">Sổ tay</CardTitle>
+                    <CardDescription className="text-xs">Hành trình nhan sắc</CardDescription>
+                </CardContent>
             </Card>
           </Link>
       </div>

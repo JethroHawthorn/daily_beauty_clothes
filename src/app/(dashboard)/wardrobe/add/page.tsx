@@ -13,72 +13,81 @@ export default function AddClothingPage() {
     const [state, action, isPending] = useActionState(addClothingItem, undefined)
 
     return (
-        <div className="container mx-auto p-4 max-w-lg">
-             <div className="mb-4">
-                 <Link href="/wardrobe" className="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:underline">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Quay lại tủ đồ
+        <div className="container mx-auto p-4 max-w-lg pb-20">
+             <div className="mb-6 flex items-center justify-between">
+                 <Link href="/wardrobe" className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <ArrowLeft className="w-5 h-5 mr-1" /> Quay xe
                  </Link>
+                 <h1 className="text-xl font-bold">Khoe món mới</h1>
+                 <div className="w-10"></div> {/* Spacer */}
              </div>
-             <Card>
-                <CardHeader>
-                    <CardTitle>Thêm món đồ mới</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form action={action} className="space-y-4">
-                        <div>
-                            <Label htmlFor="name" className="mb-2 block">Tên</Label>
-                            <Input name="name" id="name" required placeholder="Ví dụ: Áo khoác Jean xanh" />
+             
+             <form action={action} className="space-y-8">
+                {/* Image Upload Area */}
+                <div className="relative aspect-square w-full rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-muted/10 hover:bg-muted/20 transition-colors group cursor-pointer overflow-hidden">
+                    <input name="image" id="image" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground pointer-events-none">
+                        <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                            <span className="text-2xl">📷</span>
                         </div>
-                        <div>
-                            <Label htmlFor="type" className="mb-2 block">Loại</Label>
-                            <Input name="type" id="type" required placeholder="Ví dụ: Áo khoác, Sơ mi, Quần" />
-                        </div>
+                        <span className="text-sm font-medium">Chạm nhẹ để khoe ảnh</span>
+                    </div>
+                </div>
 
+                <div className="space-y-5">
+                    <div>
+                        <Label htmlFor="name" className="text-base font-semibold mb-2 block">Tên em nó là gì?</Label>
+                        <Input name="name" id="name" required placeholder="Ví dụ: Áo khoác Jean 'chất lừ'" className="h-12 bg-white/50" />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="brand" className="mb-2 block">Hãng</Label>
-                            <Input name="brand" id="brand" placeholder="Ví dụ: Zara, Uniqlo, Local Brand" />
+                            <Label htmlFor="type" className="text-base font-semibold mb-2 block">Thuộc hệ nào?</Label>
+                            <Input name="type" id="type" required placeholder="Áo, Quần, Váy..." className="h-12 bg-white/50" />
                         </div>
-                         
-                         <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label htmlFor="style" className="mb-2 block">Phong cách</Label>
-                                <Input name="style" id="style" placeholder="Ví dụ: Casual, Tiệc tùng" />
-                            </div>
-                            <div>
-                                <Label htmlFor="color" className="mb-2 block">Màu sắc</Label>
-                                <Input name="color" id="color" placeholder="Ví dụ: Xanh dương" />
-                            </div>
-                         </div>
-                         <div>
-                            <Label htmlFor="material" className="mb-2 block">Chất liệu</Label>
-                            <Input name="material" id="material" placeholder="Ví dụ: Jean, Cotton" />
-                        </div>
-                        
                         <div>
-                            <Label className="mb-2 block">Mùa</Label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {['Xuân', 'Hạ', 'Thu', 'Đông'].map((s) => (
-                                    <label key={s} className="flex items-center space-x-2 border p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800">
-                                        <input type="checkbox" name="season" value={s} className="accent-rose-400" />
-                                        <span>{s}</span>
-                                    </label>
-                                ))}
-                            </div>
+                            <Label htmlFor="brand" className="text-base font-semibold mb-2 block">Đến từ đâu?</Label>
+                            <Input name="brand" id="brand" placeholder="Zara, Local Brand..." className="h-12 bg-white/50" />
                         </div>
+                    </div>
 
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="image" className="mb-2 block">Hình ảnh</Label>
-                            <Input name="image" id="image" type="file" accept="image/*" className="cursor-pointer" />
+                            <Label htmlFor="style" className="text-base font-semibold mb-2 block">Gu gì đây?</Label>
+                            <Input name="style" id="style" placeholder="Bánh bèo, Cá tính..." className="h-12 bg-white/50" />
                         </div>
+                        <div>
+                            <Label htmlFor="color" className="text-base font-semibold mb-2 block">Màu mè ra sao?</Label>
+                            <Input name="color" id="color" placeholder="Xanh, Đỏ, Tím..." className="h-12 bg-white/50" />
+                        </div>
+                    </div>
+                     <div>
+                        <Label htmlFor="material" className="text-base font-semibold mb-2 block">Chất liệu</Label>
+                        <Input name="material" id="material" placeholder="Jean, Cotton, Lụa..." className="h-12 bg-white/50" />
+                    </div>
+                    
+                    <div>
+                        <Label className="text-base font-semibold mb-3 block">Mùa nào diện được?</Label>
+                        <div className="flex flex-wrap gap-2">
+                            {['Xuân', 'Hạ', 'Thu', 'Đông'].map((s) => (
+                                <label key={s} className="relative group cursor-pointer">
+                                    <input type="checkbox" name="season" value={s} className="peer sr-only" />
+                                    <span className="block px-4 py-2 bg-white border rounded-full text-sm font-medium text-muted-foreground transition-all peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary peer-checked:shadow-sm hover:bg-gray-50">
+                                        {s}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
 
-                        <Button type="submit" className="w-full" disabled={isPending}>
-                            {isPending ? 'Đang lưu...' : 'Thêm món đồ'}
-                        </Button>
-                        {state?.success && <p className="text-green-600 text-center font-medium">Thêm thành công!</p>}
-                        {state?.errors?._form && <p className="text-red-600 text-center">{state.errors._form}</p>}
-                    </form>
-                </CardContent>
-             </Card>
+                    <Button type="submit" className="w-full h-14 text-lg rounded-full shadow-soft hover:shadow-soft-hover mt-4 font-bold" disabled={isPending}>
+                        {isPending ? 'Đang nhét vào tủ...' : 'Nạp vào kho!'}
+                    </Button>
+                    
+                    {state?.success && <p className="text-green-600 text-center font-medium bg-green-50 p-2 rounded-lg">Xong! Hàng đã về bản.</p>}
+                    {state?.errors?._form && <p className="text-destructive text-center">{state.errors._form}</p>}
+                </div>
+            </form>
         </div>
     )
 }
