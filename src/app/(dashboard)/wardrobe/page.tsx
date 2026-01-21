@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 // import { Card, CardContent, CardFooter } from '@/components/ui/card' // unused
 import Image from 'next/image'
-import { Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus, ArrowLeft } from 'lucide-react'
 import { FavoriteButton } from '@/components/favorite-button'
 
 import { WardrobeFilters } from '@/components/wardrobe-filters'
@@ -23,7 +23,15 @@ export default async function WardrobePage({ searchParams }: Props) {
     const items = await getClothingItems(filters)
 
     return (
-        <div className="container mx-auto p-4 pb-20 max-w-7xl">
+        <div className="container mx-auto p-4 pb-24 max-w-3xl">
+            <div className="mb-4">
+                 <Link href="/">
+                    <Button variant="ghost" size="sm" className="-ml-3 text-muted-foreground hover:text-foreground">
+                        <ArrowLeft className="w-5 h-5 mr-1" /> Quay lại Home
+                    </Button>
+                 </Link>
+            </div>
+
             <div className="flex items-center justify-between mb-6">
                  <div>
                     <h1 className="text-2xl font-bold tracking-tight text-foreground">Lãnh địa quần áo 👗</h1>

@@ -13,13 +13,17 @@ export default function AddClothingPage() {
     const [state, action, isPending] = useActionState(addClothingItem, undefined)
 
     return (
-        <div className="container mx-auto p-4 max-w-lg pb-20">
-             <div className="mb-6 flex items-center justify-between">
-                 <Link href="/wardrobe" className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                    <ArrowLeft className="w-5 h-5 mr-1" /> Quay xe
+        <div className="container mx-auto p-4 max-w-lg pb-24">
+             <div className="mb-6">
+                 <Link href="/wardrobe">
+                    <Button variant="ghost" size="sm" className="-ml-3 text-muted-foreground hover:text-foreground">
+                        <ArrowLeft className="w-5 h-5 mr-1" /> Quay xe
+                    </Button>
                  </Link>
-                 <h1 className="text-xl font-bold">Khoe món mới</h1>
-                 <div className="w-10"></div> {/* Spacer */}
+             </div>
+             
+             <div className="mb-8">
+                 <h1 className="text-2xl font-bold tracking-tight text-foreground">Khoe món mới ✨</h1>
              </div>
              
              <form action={action} className="space-y-8">
