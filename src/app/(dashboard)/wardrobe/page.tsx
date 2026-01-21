@@ -6,22 +6,36 @@ import Image from 'next/image'
 import { Trash2, Plus } from 'lucide-react'
 import { FavoriteButton } from '@/components/favorite-button'
 
-export default async function WardrobePage() {
-    const items = await getClothingItems()
+import { WardrobeFilters } from '@/components/wardrobe-filters'
+
+type Props = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function WardrobePage({ searchParams }: Props) {
+    const resolvedSearchParams = await searchParams
+    const filters = {
+        search: resolvedSearchParams.search as string,
+        type: resolvedSearchParams.type as string,
+        season: resolvedSearchParams.season as string,
+        isFavorite: resolvedSearchParams.isFavorite === 'true'
+    }
+    const items = await getClothingItems(filters)
 
     return (
         <div className="container mx-auto p-4 pb-20 max-w-7xl">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
                  <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Lãnh địa quần áo 👗</h1>
-                    <p className="text-muted-foreground mt-1">Gia tài của bạn đây rồi</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Lãnh địa quần áo 👗</h1>
                  </div>
                  <Link href="/wardrobe/add">
-                    <Button className="rounded-full shadow-soft hover:shadow-soft-hover bg-primary text-primary-foreground font-semibold px-6">
-                        <Plus className="w-5 h-5 mr-2" /> Sắm đồ mới à?
+                    <Button className="rounded-full shadow-soft hover:shadow-soft-hover bg-primary text-primary-foreground font-semibold px-4 h-9 text-sm">
+                        <Plus className="w-4 h-4 mr-1" /> Thêm mới
                     </Button>
                  </Link>
             </div>
+            
+            <WardrobeFilters />
 
             {items.length === 0 ? (
                 <div className="text-center py-20 px-4 animate-in zoom-in duration-500">

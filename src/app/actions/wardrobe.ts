@@ -5,7 +5,7 @@ import { clothingItems } from '@/db/schema'
 import { verifySession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
 import { randomUUID } from 'crypto'
-import { eq, desc, and } from 'drizzle-orm'
+import { eq, desc, and, sql } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import fs from 'fs'
 import path from 'path'
@@ -56,13 +56,39 @@ export async function addClothingItem(prevState: any, formData: FormData) {
   }
 }
 
-export async function getClothingItems() {
+export type WardrobeFilters = {
+    search?: string
+    type?: string
+    season?: string
+    isFavorite?: boolean
+}
+
+export async function getClothingItems(filters?: WardrobeFilters) {
     const session = await verifySession()
     if (!session) return []
     
     try {
+      const conditions = [eq(clothingItems.userId, session.userId)]
+      
+      if (filters?.search) {
+          conditions.push(sql`lower(${clothingItems.name}) LIKE ${`%${filters.search.toLowerCase()}%`}`)
+      }
+      
+      if (filters?.type && filters.type !== 'all') {
+          conditions.push(eq(clothingItems.type, filters.type))
+      }
+
+      if (filters?.isFavorite) {
+          conditions.push(eq(clothingItems.isFavorite, true))
+      }
+
+      // Hacky JSON array filtering for SQLite
+      if (filters?.season && filters.season !== 'all') {
+           conditions.push(sql`${clothingItems.season} LIKE ${`%${filters.season}%`}`)
+      }
+
       const items = await db.query.clothingItems.findMany({
-          where: eq(clothingItems.userId, session.userId),
+          where: and(...conditions),
           orderBy: [desc(clothingItems.createdAt)]
       })
       return items

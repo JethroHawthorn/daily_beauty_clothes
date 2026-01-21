@@ -373,4 +373,158 @@ Yêu cầu:
 
 ---
 
+## 10. Đề xuất mở rộng & tối ưu sản phẩm (Product Enhancements)
+
+Phần này tổng hợp các đề xuất về **UX, UI, AI và Product** nhằm nâng cao trải nghiệm người dùng, đặc biệt phù hợp với **đối tượng nữ (20–35 tuổi)**. Đây là các gợi ý để Antigravity triển khai ngay hoặc đưa vào roadmap.
+
+---
+
+## 10.1 Các tính năng nên triển khai sớm (High-impact, Low/Medium effort)
+
+### 1. Quick Action: “Hôm nay mặc gì?” ☀️
+
+* Nút CTA lớn tại trang Home
+* Khi user bấm, hệ thống tự động:
+
+  * Lấy thời tiết hôm nay
+  * Xác định ngày thường / cuối tuần
+  * Tránh lặp lại combo đã mặc gần đây
+* Trả về 1 combo duy nhất (nhanh – không cần nhập form)
+
+**Giá trị:**
+
+* Giảm thao tác
+* Tăng tần suất sử dụng hằng ngày
+
+---
+
+### 2. Gợi ý trang phục theo cảm xúc 💗
+
+Ngoài mục đích mặc, cho user chọn thêm:
+
+* Hôm nay bạn muốn cảm thấy thế nào?
+
+  * Tự tin
+  * Nữ tính
+  * Thoải mái
+  * Năng động
+  * Dịu dàng
+
+**Áp dụng cho AI:**
+
+* Cảm xúc được đưa vào prompt Gemini
+* AI ưu tiên combo phù hợp cảm xúc
+
+**Giá trị:**
+
+* Cá nhân hoá mạnh
+* Tạo cảm giác app “hiểu người dùng”
+
+---
+
+### 3. Trang phục yêu thích ⭐
+
+* Cho phép user đánh dấu ❤️ các món đồ
+* AI ưu tiên sử dụng trong gợi ý
+
+**Giá trị:**
+
+* Dễ implement
+* Cá nhân hoá rõ rệt
+
+---
+
+## 10.2 Lịch sử & Thống kê nhẹ nhàng
+
+### 4. Lịch sử mặc đồ nâng cao 📅
+
+* Ngoài filter thời gian, bổ sung:
+
+  * Filter theo mục đích
+  * Filter theo cảm xúc
+
+---
+
+### 5. Thống kê đơn giản (không dashboard) 📊
+
+Hiển thị dạng card:
+
+* Màu sắc bạn mặc nhiều nhất
+* Loại trang phục hay dùng
+* Mục đích mặc phổ biến trong tháng
+
+**Lưu ý:**
+
+* Không dùng chart phức tạp
+* Icon + text là đủ
+
+---
+
+## 10.3 Notification & Habit Building
+
+### 6. Nhắc nhở mặc đồ (PWA Notification) 🔔
+
+* Ví dụ nội dung:
+
+  * “Hôm nay trời mát, bạn muốn gợi ý phối đồ không?”
+* Giới hạn:
+
+  * 1 lần/ngày
+  * Ngôn từ nhẹ nhàng, không spam
+
+---
+
+## 10.4 Định hướng UI/UX tổng thể
+
+### Tone & Style
+
+* Nữ tính, tươi sáng, không sến
+* Phong cách lifestyle – editorial
+* Ưu tiên cảm xúc hơn dữ liệu
+
+### Nguyên tắc UI quan trọng
+
+* Ít màu, dùng đúng chỗ
+* Spacing & typography quan trọng hơn màu sắc
+* Empty state thân thiện, khuyến khích hành động
+
+---
+
+## 10.5 Định hướng AI & Copywriting
+
+### Nguyên tắc khi dùng AI
+
+* Không phán xét người dùng
+* Không dùng từ ngữ cứng nhắc
+* Luôn có giải thích ngắn gọn, tích cực
+
+**Ví dụ tốt:**
+
+> “Combo này giúp bạn trông gọn gàng và thoải mái trong thời tiết hôm nay 💗”
+
+---
+
+## 11. Roadmap gợi ý
+
+### Phase 1 (MVP + UX tốt)
+
+* CRUD trang phục
+* Gợi ý combo AI
+* Quick Action “Hôm nay mặc gì?”
+* Trang phục yêu thích
+
+### Phase 2 (Cá nhân hoá sâu hơn)
+
+* Gợi ý theo cảm xúc
+* Thống kê nhẹ nhàng
+* Notification
+
+### Phase 3 (Lifestyle features)
+
+* Phong cách cá nhân (Style Profile)
+* Lưu outfit cho sự kiện tương lai
+* Gợi ý mặc lại đồ lâu không dùng
+
+---
+
 **End of document**
