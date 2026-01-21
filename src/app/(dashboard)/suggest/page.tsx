@@ -6,23 +6,35 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-import { Loader2, ArrowLeft, Shirt, Sparkles, Quote } from 'lucide-react'
+import { Loader2, ArrowLeft, Shirt, Sparkles, Quote, Heart } from 'lucide-react'
 import Link from 'next/link'
+
+const CLOSING_MESSAGES = [
+    "Chúc bạn có một ngày dễ thương nhé 💗",
+    "Hy vọng hôm nay bạn cảm thấy tự tin hơn một chút.",
+    "Tự tin lên nào, bạn đẹp lắm rồi! ✨",
+    "Chúc bạn tỏa sáng hôm nay nhé 💫",
+]
 
 export default function SuggestPage() {
     const [state, action, isPending] = useActionState(generateOutfit, undefined)
     const [saving, setSaving] = useState(false)
+    const [showClosingMessage, setShowClosingMessage] = useState(false)
 
     // Smart Pre-select Logic
     const today = new Date().getDay();
     const isWeekend = today === 0 || today === 6;
     const defaultPurpose = isWeekend ? "Đi cháy phố" : "Đi làm kiếm cơm";
 
-    // Helper to trigger save
+    // Helper to trigger save with emotional closure
     const handleSave = async () => {
         if (!state?.suggestion || !state?.purpose) return
         setSaving(true)
-        await saveToHistory(state.suggestion, state.weather, state.purpose)
+        setShowClosingMessage(true)
+        // Brief delay to show the message before redirect
+        setTimeout(async () => {
+            await saveToHistory(state.suggestion, state.weather, state.purpose)
+        }, 1500)
     }
 
     return (
@@ -141,12 +153,23 @@ export default function SuggestPage() {
                      </div>
 
                      <div className="flex flex-col gap-3">
-                         <Button className="w-full h-14 rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg transition-transform active:scale-95" onClick={handleSave} disabled={saving}>
-                             {saving ? <Loader2 className="mr-2 h-5 w-5 animate-spin"/> : '✅ Mình sẽ mặc bộ này'}
-                         </Button>
-                         <Button variant="ghost" className="w-full h-12 rounded-full font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50" onClick={() => window.location.reload()}>
-                             Gợi ý khác ↻
-                         </Button>
+                         {showClosingMessage ? (
+                             <div className="text-center py-6 animate-in fade-in zoom-in duration-500">
+                                 <Heart className="w-12 h-12 text-rose-400 mx-auto mb-4 animate-pulse" />
+                                 <p className="text-lg font-medium text-foreground/90">
+                                     {CLOSING_MESSAGES[Math.floor(Math.random() * CLOSING_MESSAGES.length)]}
+                                 </p>
+                             </div>
+                         ) : (
+                             <>
+                                 <Button className="w-full h-14 rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg transition-transform active:scale-95" onClick={handleSave} disabled={saving}>
+                                     {saving ? <Loader2 className="mr-2 h-5 w-5 animate-spin"/> : '✅ Mình sẽ mặc bộ này'}
+                                 </Button>
+                                 <Button variant="ghost" className="w-full h-12 rounded-full font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50" onClick={() => window.location.reload()}>
+                                     Gợi ý khác ↻
+                                 </Button>
+                             </>
+                         )}
                      </div>
                  </div>
              )}

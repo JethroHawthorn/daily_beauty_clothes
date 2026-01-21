@@ -103,6 +103,15 @@ export default async function HistoryPage() {
                     </Link>
                 </div>
             )}
+            
+            {/* Emotional Closure Footer */}
+            {history.length > 0 && (
+                <div className="text-center pt-8 pb-4 mt-6 border-t border-border/30">
+                    <p className="text-sm text-muted-foreground/70">
+                        Hy vọng hôm nay bạn cảm thấy tự tin hơn một chút. 💗
+                    </p>
+                </div>
+            )}
         </div>
     )
 }

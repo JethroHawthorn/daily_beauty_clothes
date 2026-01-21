@@ -101,6 +101,11 @@ export default async function HomePage() {
             </Card>
           </Link>
       </div>
+      
+      {/* Exit Clarity */}
+      <p className="text-center text-xs text-muted-foreground/60 mt-8">
+          Bạn chỉ cần dùng app này 1–2 phút mỗi ngày là đủ.
+      </p>
     </div>
   )
 }
