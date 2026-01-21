@@ -91,9 +91,9 @@ export default async function HistoryPage() {
                      <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 opacity-50">
                         <span className="text-4xl grayscale">🕰️</span>
                     </div>
-                    <h3 className="text-xl font-bold mb-2 text-muted-foreground">Chưa có gì để nhớ thương</h3>
+                    <h3 className="text-xl font-bold mb-2 text-muted-foreground">Sổ tay chưa có gì cả</h3>
                     <p className="text-muted-foreground/70 text-sm max-w-xs mx-auto">
-                        Bắt đầu ngày mới bằng việc hỏi AI xem nay mặc gì cho xinh đi!
+                        Từ hôm nay, mình sẽ giúp bạn nhớ đã mặc gì mỗi ngày nha
                     </p>
                     <Link href="/suggest" className="mt-8 inline-block">
                         <Button className="rounded-full shadow-soft font-bold">Hỏi Thần thái đại nhân</Button>

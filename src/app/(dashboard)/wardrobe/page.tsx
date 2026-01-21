@@ -50,9 +50,9 @@ export default async function WardrobePage({ searchParams }: Props) {
                     <div className="w-40 h-40 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft-hover">
                          <span className="text-6xl">🛍️</span>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-foreground">Tủ đồ trống huơ trống hoác!</h3>
+                    <h3 className="text-2xl font-bold mb-3 text-foreground">Tủ đồ chưa có gì nè</h3>
                     <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
-                        Chưa có món nào để khoe cả. Nạp đạn nhan sắc vào ngay đi nào!
+                        Thêm vài món đồ đầu tiên để mình gợi ý cho bạn nhé 💗
                     </p>
                     <Link href="/wardrobe/add">
                         <Button size="lg" className="rounded-full text-lg h-14 px-8 shadow-soft hover:shadow-soft-hover font-bold">

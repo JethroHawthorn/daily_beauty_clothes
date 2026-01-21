@@ -20,15 +20,16 @@ export default async function HomePage() {
       </div>
 
       {/* Weather Widget */}
-      <Card className={`mb-8 text-white border-none shadow-soft ${weather && weather.temp > 25 ? 'gradient-rose' : 'bg-secondary'}`}>
-          <CardContent className="p-6">
-              <div className="flex justify-between items-center">
+      <Card className="mb-8 bg-white border border-border shadow-soft h-auto overflow-hidden">
+          <CardContent className="p-6 relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-rose opacity-10 rounded-bl-full pointer-events-none"></div>
+              <div className="flex justify-between items-center relative z-10">
                   <div>
-                      <p className="text-sm font-medium opacity-90 mb-1">Thời tiết hiện tại</p>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Thời tiết hiện tại</p>
                       {weather ? (
                         <>
-                            <h2 className="text-5xl font-bold tracking-tighter">{weather.temp}°</h2>
-                            <p className="mt-2 font-medium flex items-center gap-2 text-sm">
+                            <h2 className="text-5xl font-bold tracking-tighter text-foreground">{weather.temp}°</h2>
+                            <p className="mt-2 font-medium flex items-center gap-2 text-sm text-foreground/80">
                                 <span>{weather.full.location}</span> • <span>{weather.condition}</span>
                             </p>
                         </>
@@ -39,7 +40,7 @@ export default async function HomePage() {
                         </div>
                       )}
                   </div>
-                  <div className="text-6xl drop-shadow-md">
+                  <div className="text-6xl drop-shadow-sm filter">
                       {weather ? (weather.temp > 25 ? '☀️' : '⛅') : '🌥️'}
                   </div>
               </div>
