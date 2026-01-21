@@ -85,3 +85,18 @@ export async function deleteClothingItem(id: string) {
     )
     revalidatePath('/wardrobe')
 }
+
+export async function toggleFavorite(id: string, isFavorite: boolean) {
+    const session = await verifySession()
+    if (!session) redirect('/login')
+    
+    await db.update(clothingItems)
+        .set({ isFavorite: isFavorite })
+        .where(
+            and(
+                eq(clothingItems.id, id),
+                eq(clothingItems.userId, session.userId)
+            )
+        )
+    revalidatePath('/wardrobe')
+}

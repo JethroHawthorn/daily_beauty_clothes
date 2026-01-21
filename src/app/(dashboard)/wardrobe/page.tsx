@@ -1,9 +1,10 @@
 import { getClothingItems, deleteClothingItem } from '@/app/actions/wardrobe'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+// import { Card, CardContent, CardFooter } from '@/components/ui/card' // unused
 import Image from 'next/image'
-import { ArrowLeft, Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus } from 'lucide-react'
+import { FavoriteButton } from '@/components/favorite-button'
 
 export default async function WardrobePage() {
     const items = await getClothingItems()
@@ -47,9 +48,14 @@ export default async function WardrobePage() {
                                ) : (
                                    <div className="flex items-center justify-center h-full text-muted-foreground/30 text-2xl">📷</div>
                                )}
-                               <div className="absolute top-2 right-2 flex gap-1">
+                               
+                               <div className="absolute top-2 right-2 z-10">
+                                   <FavoriteButton itemId={item.id} isFavorite={item.isFavorite || false} />
+                               </div>
+
+                               <div className="absolute bottom-2 right-2 flex gap-1 flex-wrap justify-end max-w-[80%]">
                                     {item.season?.map((s: string) => (
-                                        <span key={s} className="bg-white/80 backdrop-blur-md text-[10px] px-1.5 py-0.5 rounded-full text-foreground/70 font-medium border border-white/20">
+                                        <span key={s} className="bg-black/40 backdrop-blur-md text-[10px] px-1.5 py-0.5 rounded-full text-white/90 font-medium border border-white/10 shadow-sm">
                                             {s[0]}
                                         </span>
                                     ))}

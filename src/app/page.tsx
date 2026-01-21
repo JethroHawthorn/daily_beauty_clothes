@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { Card, CardContent, CardTitle, CardDescription, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card'
 import { verifySession } from '@/lib/session'
 import { getWeather } from '@/lib/weather'
+import { QuickAction } from '@/components/quick-action'
 
 export default async function HomePage() {
   await verifySession()
@@ -9,11 +10,15 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto p-4 max-w-md pb-20">
-      <header className="mb-8 pt-6">
+      <header className="mb-6 pt-6">
          <h1 className="text-2xl font-bold text-foreground">Chào người đẹp! 💃</h1>
          <p className="text-muted-foreground text-sm mt-1">Hôm nay diện gì cho thiên hạ trầm trồ đây?</p>
       </header>
       
+      <div className="mb-8">
+        <QuickAction />
+      </div>
+
       {/* Weather Widget */}
       <Card className={`mb-8 text-white border-none shadow-soft ${weather && weather.temp > 25 ? 'gradient-rose' : 'bg-secondary'}`}>
           <CardContent className="p-6">
@@ -77,5 +82,3 @@ export default async function HomePage() {
     </div>
   )
 }
-
-

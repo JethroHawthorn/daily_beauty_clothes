@@ -22,6 +22,7 @@ export const clothingItems = sqliteTable("clothing_items", {
   material: text("material"),
   season: text("season", { mode: "json" }).$type<string[]>().notNull(), // Stored as JSON array
   imageUrl: text("image_url"),
+  isFavorite: integer("is_favorite", { mode: "boolean" }).default(false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(strftime('%s', 'now'))`)
     .notNull(),

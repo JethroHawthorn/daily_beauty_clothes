@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -14,9 +14,23 @@ const inter = Inter({
   weight: ["400", "500"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#e9a1b1",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export const metadata: Metadata = {
   title: "Daily Beauty Clothes",
   description: "Quản lý tủ đồ & gợi ý phối đồ bằng AI",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "StyleMate",
+  },
 };
 
 export default function RootLayout({
