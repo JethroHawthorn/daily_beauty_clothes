@@ -126,3 +126,65 @@ export async function toggleFavorite(id: string, isFavorite: boolean) {
         )
     revalidatePath('/wardrobe')
 }
+
+export async function getClothingItem(id: string) {
+    const session = await verifySession()
+    if (!session) return null
+
+    const item = await db.query.clothingItems.findFirst({
+        where: and(
+            eq(clothingItems.id, id),
+            eq(clothingItems.userId, session.userId)
+        )
+    })
+    return item
+}
+
+export async function updateClothingItem(id: string, prevState: any, formData: FormData) {
+    const session = await verifySession()
+    if (!session) redirect('/login')
+
+    const name = formData.get('name') as string
+    const type = formData.get('type') as string
+    const brand = formData.get('brand') as string
+    const style = formData.get('style') as string
+    const color = formData.get('color') as string
+    const material = formData.get('material') as string
+    const seasons = formData.getAll('season') as string[]
+    const imageFile = formData.get('image') as File
+
+    let imageUrl = undefined // undefined means don't update
+    if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
+        const buffer = Buffer.from(await imageFile.arrayBuffer())
+        const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+        const uploadDir = path.join(process.cwd(), 'public', 'uploads')
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true })
+        }
+        fs.writeFileSync(path.join(uploadDir, filename), buffer)
+        imageUrl = `/uploads/${filename}`
+    }
+
+    try {
+        await db.update(clothingItems).set({
+            name,
+            type,
+            brand,
+            style,
+            color,
+            material,
+            season: seasons,
+            ...(imageUrl && { imageUrl }), // Only update if new image uploaded
+        }).where(
+            and(
+                eq(clothingItems.id, id),
+                eq(clothingItems.userId, session.userId)
+            )
+        )
+        revalidatePath('/wardrobe')
+        return { success: true }
+    } catch (e) {
+        console.error(e)
+        return { errors: { _form: "Cập nhật thất bại" } }
+    }
+}

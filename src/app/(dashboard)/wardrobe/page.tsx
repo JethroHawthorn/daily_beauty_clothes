@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 // import { Card, CardContent, CardFooter } from '@/components/ui/card' // unused
 import Image from 'next/image'
-import { Trash2, Plus, ArrowLeft, Shirt, ShoppingBag, ImageOff } from 'lucide-react'
+import { Trash2, Plus, ArrowLeft, Shirt, ShoppingBag, ImageOff, Pencil } from 'lucide-react'
 import { FavoriteButton } from '@/components/favorite-button'
 
 import { WardrobeFilters } from '@/components/wardrobe-filters'
@@ -96,14 +96,21 @@ export default async function WardrobePage({ searchParams }: Props) {
                                 </div>
                             </div>
                             
-                            <form action={async () => {
-                                   'use server'
-                                   await deleteClothingItem(item.id)
-                               }} className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                   <Button variant="ghost" size="icon-sm" className="h-8 w-8 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-destructive hover:text-white transition-colors">
-                                       <Trash2 className="w-4 h-4" />
-                                   </Button>
-                            </form>
+                            <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
+                                <Link href={`/wardrobe/edit/${item.id}`}>
+                                    <Button variant="ghost" size="icon-sm" className="h-8 w-8 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-primary hover:text-white transition-colors">
+                                        <Pencil className="w-4 h-4" />
+                                    </Button>
+                                </Link>
+                                <form action={async () => {
+                                       'use server'
+                                       await deleteClothingItem(item.id)
+                                   }}>
+                                       <Button variant="ghost" size="icon-sm" className="h-8 w-8 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-destructive hover:text-white transition-colors">
+                                           <Trash2 className="w-4 h-4" />
+                                       </Button>
+                                </form>
+                            </div>
                         </div>
                     ))}
                 </div>
