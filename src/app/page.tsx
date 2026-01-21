@@ -15,7 +15,7 @@ export default async function HomePage() {
       </header>
       
       {/* Weather Widget */}
-      <Card className={`mb-8 text-white border-none shadow-bloom ${weather && weather.temp > 25 ? 'gradient-bloom' : 'bg-secondary'}`}>
+      <Card className={`mb-8 text-white border-none shadow-soft ${weather && weather.temp > 25 ? 'gradient-rose' : 'bg-secondary'}`}>
           <CardContent className="p-6">
               <div className="flex justify-between items-center">
                   <div>
@@ -43,7 +43,7 @@ export default async function HomePage() {
 
       <div className="flex flex-col gap-3">
           <Link href="/suggest">
-            <Card className="shadow-bloom hover:shadow-bloom-hover transition-card tap-scale cursor-pointer border-l-4 border-l-accent">
+            <Card className="shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-l-4 border-l-accent">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
                     <div className="text-2xl bg-accent-light p-3 rounded-full">✨</div>
                     <div className="flex flex-col">
@@ -55,7 +55,7 @@ export default async function HomePage() {
           </Link>
 
           <Link href="/wardrobe">
-            <Card className="shadow-bloom hover:shadow-bloom-hover transition-card tap-scale cursor-pointer border-l-4 border-l-primary">
+            <Card className="shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-l-4 border-l-primary">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
                     <div className="text-2xl bg-primary-light p-3 rounded-full">👕</div>
                     <div className="flex flex-col">
@@ -67,7 +67,7 @@ export default async function HomePage() {
           </Link>
 
           <Link href="/history">
-            <Card className="shadow-bloom hover:shadow-bloom-hover transition-card tap-scale cursor-pointer border-l-4 border-l-secondary">
+            <Card className="shadow-soft hover:shadow-soft-hover transition-card tap-scale cursor-pointer border-l-4 border-l-secondary">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
                     <div className="text-2xl bg-secondary-light p-3 rounded-full">📅</div>
                     <div className="flex flex-col">

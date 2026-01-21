@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Modern Bloom Design System v3 */
+/* Dusty Rose Design System v3.1 */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -47,66 +47,73 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
   
-  /* Modern Bloom Semantic Colors */
+  /* Semantic Colors */
   --color-success: #70B888;
-  --color-info: #9DA3C4;
-  --color-warning: #F2A384;
+  --color-info: #B5B9D1;
+  --color-warning: #F4C0B0;
 }
 
 :root {
   --radius: 1rem;
   
-  /* Modern Bloom - Light Theme */
-  --background: #FFFCFC;
+  /* Dusty Rose - Light Theme */
+  --background: #FFFCFB;
   --foreground: #4A3E3F;
   --card: #FFFFFF;
   --card-foreground: #4A3E3F;
   --popover: #FFFFFF;
   --popover-foreground: #4A3E3F;
   
-  /* Primary - Radiant Rose */
-  --primary: #DF6B78;
-  --primary-foreground: #FFFFFF;
+  /* Primary - Dusty Rose */
+  --primary: #EFA6B5;
+  --primary-foreground: #4A3E3F; /* Dark text for contrast */
   
-  /* Secondary - Serene Lavender */
-  --secondary: #9DA3C4;
-  --secondary-foreground: #FFFFFF;
+  /* Secondary - Muted Mauve */
+  --secondary: #B5B9D1;
+  --secondary-foreground: #4A3E3F;
   
-  /* Accent - Morning Peach */
-  --accent: #F2A384;
+  /* Accent - Soft Coral */
+  --accent: #F4C0B0;
   --accent-foreground: #4A3E3F;
   
   /* Muted */
-  --muted: #F5F0F0;
-  --muted-foreground: #8C8182;
+  --muted: #F7F2F3;
+  --muted-foreground: #94898A;
   
   /* Destructive */
   --destructive: #E35D6A;
   --destructive-foreground: #FFFFFF;
   
   /* Border & Input */
-  --border: #F0E6E7;
-  --input: #F0E6E7;
-  --ring: #DF6B78;
+  --border: #F2EBEC;
+  --input: #F2EBEC;
+  --ring: #EFA6B5;
   
   /* Sidebar */
-  --sidebar: #FFFCFC;
+  --sidebar: #FFFCFB;
   --sidebar-foreground: #4A3E3F;
-  --sidebar-primary: #DF6B78;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FCE8EA;
-  --sidebar-accent-foreground: #DF6B78;
-  --sidebar-border: #F0E6E7;
-  --sidebar-ring: #DF6B78;
+  --sidebar-primary: #EFA6B5;
+  --sidebar-primary-foreground: #4A3E3F;
+  --sidebar-accent: #FDF2F4;
+  --sidebar-accent-foreground: #EFA6B5;
+  --sidebar-border: #F2EBEC;
+  --sidebar-ring: #EFA6B5;
   
   /* Custom Utilities Colors */
-  --primary-light: #FCE8EA;
-  --secondary-light: #F0F1F7;
-  --accent-light: #FEF5F2;
+  --primary-light: #FDF2F4;
+  --secondary-light: #F4F5FA;
+  --accent-light: #FEF8F6;
+  
+  /* Charts */
+  --chart-1: #EFA6B5;
+  --chart-2: #F4C0B0;
+  --chart-3: #B5B9D1;
+  --chart-4: #E8D5B5;
+  --chart-5: #94898A;
 }
 
 .dark {
-  /* Modern Bloom - Dark Theme */
+  /* Dusty Rose - Dark Theme */
   --background: #1C1919;
   --foreground: #F5EAEB;
   --card: #262222;
@@ -114,13 +121,13 @@
   --popover: #262222;
   --popover-foreground: #F5EAEB;
   
-  --primary: #E88C96;
+  --primary: #EFA6B5;
   --primary-foreground: #4A3E3F;
   
   --secondary: #868CB3;
   --secondary-foreground: #FFFFFF;
   
-  --accent: #F2A384;
+  --accent: #F4C0B0;
   --accent-foreground: #4A3E3F;
   
   --muted: #362F2F;
@@ -131,16 +138,16 @@
   
   --border: #362F2F;
   --input: #362F2F;
-  --ring: #E88C96;
+  --ring: #EFA6B5;
   
   --sidebar: #1C1919;
   --sidebar-foreground: #F5EAEB;
-  --sidebar-primary: #E88C96;
+  --sidebar-primary: #EFA6B5;
   --sidebar-primary-foreground: #4A3E3F;
   --sidebar-accent: #362F2F;
-  --sidebar-accent-foreground: #E88C96;
+  --sidebar-accent-foreground: #EFA6B5;
   --sidebar-border: #362F2F;
-  --sidebar-ring: #E88C96;
+  --sidebar-ring: #EFA6B5;
   
   /* Custom Utilities Colors */
   --primary-light: #4A2A2D;
@@ -175,17 +182,17 @@
     background-color: var(--accent-light);
   }
 
-  /* Bloom Shadows */
-  .shadow-bloom {
-    box-shadow: 0 4px 20px rgba(223, 107, 120, 0.15);
+  /* Soft Shadows */
+  .shadow-soft {
+    box-shadow: 0 4px 20px rgba(239, 166, 181, 0.15);
   }
-  .shadow-bloom-hover {
-    box-shadow: 0 8px 25px rgba(223, 107, 120, 0.2);
+  .shadow-soft-hover {
+    box-shadow: 0 8px 25px rgba(239, 166, 181, 0.2);
   }
   
   /* Gradients */
-  .gradient-bloom {
-    background: linear-gradient(135deg, #DF6B78 0%, #F2A384 100%);
+  .gradient-rose {
+    background: linear-gradient(135deg, #EFA6B5 0%, #F4C0B0 100%);
   }
   
   /* Transitions */

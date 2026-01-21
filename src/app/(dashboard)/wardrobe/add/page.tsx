@@ -26,35 +26,35 @@ export default function AddClothingPage() {
                 <CardContent>
                     <form action={action} className="space-y-4">
                         <div>
-                            <Label htmlFor="name">Tên</Label>
+                            <Label htmlFor="name" className="mb-2 block">Tên</Label>
                             <Input name="name" id="name" required placeholder="Ví dụ: Áo khoác Jean xanh" />
                         </div>
                         <div>
-                            <Label htmlFor="type">Loại</Label>
+                            <Label htmlFor="type" className="mb-2 block">Loại</Label>
                             <Input name="type" id="type" required placeholder="Ví dụ: Áo khoác, Sơ mi, Quần" />
                         </div>
                          
                          <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="style">Phong cách</Label>
+                                <Label htmlFor="style" className="mb-2 block">Phong cách</Label>
                                 <Input name="style" id="style" placeholder="Ví dụ: Casual, Tiệc tùng" />
                             </div>
                             <div>
-                                <Label htmlFor="color">Màu sắc</Label>
+                                <Label htmlFor="color" className="mb-2 block">Màu sắc</Label>
                                 <Input name="color" id="color" placeholder="Ví dụ: Xanh dương" />
                             </div>
                          </div>
                          <div>
-                            <Label htmlFor="material">Chất liệu</Label>
+                            <Label htmlFor="material" className="mb-2 block">Chất liệu</Label>
                             <Input name="material" id="material" placeholder="Ví dụ: Jean, Cotton" />
                         </div>
                         
                         <div>
-                            <Label>Mùa</Label>
+                            <Label className="mb-2 block">Mùa</Label>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {['Xuân', 'Hạ', 'Thu', 'Đông'].map((s) => (
                                     <label key={s} className="flex items-center space-x-2 border p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800">
-                                        <input type="checkbox" name="season" value={s} className="accent-black" />
+                                        <input type="checkbox" name="season" value={s} className="accent-rose-400" />
                                         <span>{s}</span>
                                     </label>
                                 ))}
@@ -62,7 +62,7 @@ export default function AddClothingPage() {
                         </div>
 
                         <div>
-                            <Label htmlFor="image">Hình ảnh</Label>
+                            <Label htmlFor="image" className="mb-2 block">Hình ảnh</Label>
                             <Input name="image" id="image" type="file" accept="image/*" className="cursor-pointer" />
                         </div>
 

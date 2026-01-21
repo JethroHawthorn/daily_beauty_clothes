@@ -29,17 +29,17 @@ export default function SuggestPage() {
              </div>
              
              {!state?.success && (
-                <Card>
+                <Card className="shadow-soft">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                             <span className="bg-orange-100 p-2 rounded-lg text-xl">✨</span>
+                             <span className="bg-accent-light p-2 rounded-lg text-xl">✨</span>
                              Gợi ý phối đồ
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form action={action} className="space-y-4">
                             <div>
-                                <Label htmlFor="purpose">Mục đích mặc là gì?</Label>
+                                <Label htmlFor="purpose" className="mb-2 block">Mục đích mặc là gì?</Label>
                                 <Input name="purpose" list="purposes" placeholder="Ví dụ: Đi làm, Đi chơi, Hẹn hò" required className="mt-1" />
                                 <datalist id="purposes">
                                     <option value="Đi làm" />
@@ -49,47 +49,47 @@ export default function SuggestPage() {
                                     <option value="Tiệc tùng" />
                                     <option value="Du lịch" />
                                 </datalist>
-                                <p className="text-xs text-gray-500 mt-2">
-                                    Chúng tôi sẽ phân tích thời tiết (28°C, Có mây) và tủ đồ của bạn.
+                                <p className="text-xs text-muted-foreground mt-2">
+                                    Chúng tôi sẽ phân tích thời tiết và tủ đồ của bạn.
                                 </p>
                             </div>
                             <Button className="w-full" disabled={isPending}>
                                 {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Đang phối đồ...</> : 'Hỏi AI Stylist'}
                             </Button>
-                            {state?.error && <p className="text-red-500 text-sm bg-red-50 p-2 rounded">{state.error}</p>}
+                            {state?.error && <p className="text-destructive text-sm bg-red-50 p-2 rounded">{state.error}</p>}
                         </form>
                     </CardContent>
                 </Card>
              )}
 
              {state?.success && state.suggestion && (
-                 <Card className="border-2 border-purple-200 shadow-md">
-                     <CardHeader className="bg-purple-50 dark:bg-zinc-900 border-b pb-4">
-                         <CardTitle className="text-purple-700 dark:text-purple-400 text-lg">Trang phục gợi ý</CardTitle>
-                         <div className="flex justify-between text-sm text-gray-600 mt-1">
+                 <Card className="border-2 border-primary shadow-soft">
+                     <CardHeader className="bg-primary-light border-b pb-4">
+                         <CardTitle className="text-primary-foreground text-lg">Trang phục gợi ý</CardTitle>
+                         <div className="flex justify-between text-sm text-foreground/80 mt-1">
                             <span>Mục đích: {state.purpose}</span>
                             <span>Nhiệt độ: {state.weather.temp}°C</span>
                          </div>
                      </CardHeader>
                      <CardContent className="pt-6 space-y-6">
                          <div>
-                             <h4 className="font-semibold mb-3 flex items-center gap-2"><Shirt className="w-4 h-4"/> Bộ đồ</h4>
+                             <h4 className="font-semibold mb-3 flex items-center gap-2 text-foreground"><Shirt className="w-4 h-4"/> Bộ đồ</h4>
                              <ul className="space-y-2">
                                  {state.suggestion.items.map((item: string, idx: number) => (
-                                     <li key={idx} className="flex items-center gap-2 bg-white dark:bg-black border p-3 rounded-lg shadow-sm">
-                                         <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500">{idx + 1}</span>
+                                     <li key={idx} className="flex items-center gap-2 bg-card border p-3 rounded-lg shadow-sm">
+                                         <span className="w-6 h-6 rounded-full bg-secondary-light flex items-center justify-center text-xs text-foreground font-medium">{idx + 1}</span>
                                          <span className="font-medium">{item}</span>
                                      </li>
                                  ))}
                              </ul>
                          </div>
-                         <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg text-sm text-yellow-800 dark:text-yellow-200 border border-yellow-100 dark:border-yellow-900/30">
+                         <div className="bg-accent-light p-4 rounded-lg text-sm text-foreground border border-accent/20">
                              <strong>Tại sao chọn bộ này:</strong> <span className="italic">{state.suggestion.reason}</span>
                          </div>
                      </CardContent>
                      <CardFooter className="flex gap-3 pt-2">
                          <Button variant="outline" className="flex-1" onClick={() => window.location.reload()}>Thử lại</Button>
-                         <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white" onClick={handleSave} disabled={saving}>
+                         <Button className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground" onClick={handleSave} disabled={saving}>
                              {saving ? 'Đang lưu...' : 'Mặc bộ này!'}
                          </Button>
                      </CardFooter>

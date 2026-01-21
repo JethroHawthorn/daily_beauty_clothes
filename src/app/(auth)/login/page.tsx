@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-sm shadow-bloom">
+      <Card className="w-full max-w-sm shadow-soft">
         <CardHeader className="text-center pb-2">
           <div className="text-4xl mb-3 bg-primary-light p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center">🌸</div>
           <CardTitle className="text-xl font-bold">Đăng nhập</CardTitle>
@@ -38,7 +38,7 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter className="pt-4">
-            <Button className="w-full h-12 font-medium" disabled={isPending}>
+            <Button className="w-full h-12 font-medium text-primary-foreground" disabled={isPending}>
               {isPending ? 'Đang đăng nhập...' : 'Tiếp tục'}
             </Button>
           </CardFooter>
