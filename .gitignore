@@ -49,4 +49,6 @@ next-env.d.ts
 # uploads
 /public/uploads
 
+.agent
 .agents
+.gemini
