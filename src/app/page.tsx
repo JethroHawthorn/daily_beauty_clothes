@@ -9,13 +9,13 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto p-4 max-w-md pb-20">
-      <header className="mb-8 pt-4">
-         <h1 className="text-3xl font-bold">Xin chào! 👋</h1>
-         <p className="text-gray-500">Hôm nay bạn muốn mặc gì?</p>
+      <header className="mb-8 pt-6">
+         <h1 className="text-2xl font-bold text-foreground">Xin chào! 👋</h1>
+         <p className="text-muted-foreground text-sm mt-1">Hôm nay bạn muốn mặc gì?</p>
       </header>
       
       {/* Weather Widget */}
-      <Card className="mb-8 bg-gradient-to-br from-blue-500 to-cyan-400 text-white border-none shadow-lg">
+      <Card className={`mb-8 text-white border-none shadow-bloom ${weather && weather.temp > 25 ? 'gradient-bloom' : 'bg-secondary'}`}>
           <CardContent className="p-6">
               <div className="flex justify-between items-center">
                   <div>
@@ -23,7 +23,7 @@ export default async function HomePage() {
                       {weather ? (
                         <>
                             <h2 className="text-5xl font-bold tracking-tighter">{weather.temp}°</h2>
-                            <p className="mt-2 font-medium flex items-center gap-2">
+                            <p className="mt-2 font-medium flex items-center gap-2 text-sm">
                                 <span>{weather.full.location}</span> • <span>{weather.condition}</span>
                             </p>
                         </>
@@ -34,45 +34,45 @@ export default async function HomePage() {
                         </div>
                       )}
                   </div>
-                  <div className="text-7xl drop-shadow-md">
+                  <div className="text-6xl drop-shadow-md">
                       {weather ? (weather.temp > 25 ? '☀️' : '⛅') : '🌥️'}
                   </div>
               </div>
           </CardContent>
       </Card>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
           <Link href="/suggest">
-            <Card className="hover:shadow-md transition-all active:scale-95 cursor-pointer border-l-4 border-l-orange-400">
+            <Card className="shadow-bloom hover:shadow-bloom-hover transition-card tap-scale cursor-pointer border-l-4 border-l-accent">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
-                    <div className="text-3xl bg-orange-100 p-3 rounded-xl">✨</div>
+                    <div className="text-2xl bg-accent-light p-3 rounded-full">✨</div>
                     <div className="flex flex-col">
-                        <CardTitle className="text-lg">Gợi ý phối đồ</CardTitle>
-                        <CardDescription>Để AI stylist chọn đồ giúp bạn</CardDescription>
+                        <CardTitle className="text-base font-semibold">Gợi ý phối đồ</CardTitle>
+                        <CardDescription className="text-sm">Để AI stylist chọn đồ giúp bạn</CardDescription>
                     </div>
                 </CardHeader>
             </Card>
           </Link>
 
           <Link href="/wardrobe">
-            <Card className="hover:shadow-md transition-all active:scale-95 cursor-pointer border-l-4 border-l-purple-400">
+            <Card className="shadow-bloom hover:shadow-bloom-hover transition-card tap-scale cursor-pointer border-l-4 border-l-primary">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
-                    <div className="text-3xl bg-purple-100 p-3 rounded-xl">👕</div>
+                    <div className="text-2xl bg-primary-light p-3 rounded-full">👕</div>
                     <div className="flex flex-col">
-                         <CardTitle className="text-lg">Tủ đồ của tôi</CardTitle>
-                        <CardDescription>Quản lý quần áo</CardDescription>
+                         <CardTitle className="text-base font-semibold">Tủ đồ của tôi</CardTitle>
+                        <CardDescription className="text-sm">Quản lý quần áo</CardDescription>
                     </div>
                 </CardHeader>
             </Card>
           </Link>
 
           <Link href="/history">
-            <Card className="hover:shadow-md transition-all active:scale-95 cursor-pointer border-l-4 border-l-green-400">
+            <Card className="shadow-bloom hover:shadow-bloom-hover transition-card tap-scale cursor-pointer border-l-4 border-l-secondary">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
-                    <div className="text-3xl bg-green-100 p-3 rounded-xl">📅</div>
+                    <div className="text-2xl bg-secondary-light p-3 rounded-full">📅</div>
                     <div className="flex flex-col">
-                        <CardTitle className="text-lg">Lịch sử</CardTitle>
-                        <CardDescription>Xem lại trang phục đã mặc</CardDescription>
+                        <CardTitle className="text-base font-semibold">Lịch sử</CardTitle>
+                        <CardDescription className="text-sm">Xem lại trang phục đã mặc</CardDescription>
                     </div>
                 </CardHeader>
             </Card>
@@ -81,3 +81,5 @@ export default async function HomePage() {
     </div>
   )
 }
+
+
