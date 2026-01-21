@@ -16,6 +16,7 @@ export async function addClothingItem(prevState: any, formData: FormData) {
 
   const name = formData.get('name') as string
   const type = formData.get('type') as string
+  const brand = formData.get('brand') as string
   const style = formData.get('style') as string
   const color = formData.get('color') as string
   const material = formData.get('material') as string
@@ -40,6 +41,7 @@ export async function addClothingItem(prevState: any, formData: FormData) {
         userId: session.userId,
         name,
         type,
+        brand,
         style,
         color,
         material,

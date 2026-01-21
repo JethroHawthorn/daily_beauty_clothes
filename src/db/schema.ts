@@ -17,6 +17,7 @@ export const clothingItems = sqliteTable("clothing_items", {
   name: text("name").notNull(),
   type: text("type").notNull(), // e.g., 'shirt', 'pants'
   style: text("style"), // e.g., 'casual', 'formal'
+  brand: text("brand"),
   color: text("color"),
   material: text("material"),
   season: text("season", { mode: "json" }).$type<string[]>().notNull(), // Stored as JSON array

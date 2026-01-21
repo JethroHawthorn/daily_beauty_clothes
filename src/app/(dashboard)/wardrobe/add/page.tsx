@@ -33,6 +33,11 @@ export default function AddClothingPage() {
                             <Label htmlFor="type" className="mb-2 block">Loại</Label>
                             <Input name="type" id="type" required placeholder="Ví dụ: Áo khoác, Sơ mi, Quần" />
                         </div>
+
+                        <div>
+                            <Label htmlFor="brand" className="mb-2 block">Hãng</Label>
+                            <Input name="brand" id="brand" placeholder="Ví dụ: Zara, Uniqlo, Local Brand" />
+                        </div>
                          
                          <div className="grid grid-cols-2 gap-4">
                             <div>
