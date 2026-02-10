@@ -5,7 +5,7 @@ import { clothingItems } from '@/db/schema'
 import { revalidatePath } from 'next/cache'
 import { randomUUID } from 'crypto'
 import { eq, desc, and, sql } from 'drizzle-orm'
-
+import { uploadToCloudinary } from '@/lib/cloudinary'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function addClothingItem(prevState: any, formData: FormData) {
@@ -20,8 +20,16 @@ export async function addClothingItem(prevState: any, formData: FormData) {
   const seasons = formData.getAll('season') as string[]
   const imageFile = formData.get('image') as File
 
-  // Image upload removed
-  const imageUrl = ''
+  let imageUrl = ''
+  if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
+      try {
+        const result = await uploadToCloudinary(imageFile)
+        imageUrl = result.secure_url
+      } catch (error) {
+          console.error("Upload failed", error)
+          return { errors: { _form: "Upload ảnh thất bại: " + (error instanceof Error ? error.message : "Lỗi không xác định") } }
+      }
+  }
 
   try {
      await db.insert(clothingItems).values({
@@ -136,8 +144,16 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
     const seasons = formData.getAll('season') as string[]
     const imageFile = formData.get('image') as File
 
-  // Image upload removed
-  const imageUrl = undefined
+    let imageUrl = undefined // undefined means don't update
+    if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
+        try {
+            const result = await uploadToCloudinary(imageFile)
+            imageUrl = result.secure_url
+        } catch (error) {
+            console.error("Upload failed", error)
+            return { errors: { _form: "Upload ảnh thất bại" } }
+        }
+    }
 
     try {
         await db.update(clothingItems).set({
@@ -147,7 +163,7 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
             color,
             material,
             season: seasons,
-            // imageUrl removed
+            ...(imageUrl && { imageUrl }), // Only update if new image uploaded
         }).where(
             and(
                 eq(clothingItems.id, id),

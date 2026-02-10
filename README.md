@@ -23,6 +23,8 @@
 | AI | Google Gemini API |
 | Weather | WeatherAPI.com |
 | Auth | JWT (jose) |
+| Storage | Cloudinary |
+
 
 ## 🚀 Bắt đầu
 
@@ -49,6 +51,10 @@ TURSO_URL=libsql://your-database.turso.io
 TURSO_TOKEN=your_turso_auth_token
 GEMINI_API_KEY=your_google_gemini_key
 WEATHER_API_KEY=your_weatherapi_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
 ```
 
 ### 3. Khởi tạo database
@@ -88,6 +94,8 @@ src/
 | Turso | [turso.tech](https://turso.tech) |
 | Google Gemini | [aistudio.google.com](https://aistudio.google.com) |
 | WeatherAPI | [weatherapi.com](https://weatherapi.com) |
+| Cloudinary | [cloudinary.com](https://cloudinary.com) |
+
 
 ## 📝 License
 
