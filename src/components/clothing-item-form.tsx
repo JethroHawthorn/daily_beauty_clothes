@@ -13,8 +13,7 @@ type Props = {
   initialData?: {
     name: string
     type: string
-    brand?: string | null
-    style?: string | null
+    fit?: string | null
     color?: string | null
     material?: string | null
     season?: string[] | null
@@ -57,16 +56,28 @@ export function ClothingItemForm({ action, initialData, submitLabel = 'Nạp và
             <Input name="type" id="type" required defaultValue={initialData?.type} placeholder="Áo, Quần, Váy..." className="h-12 bg-white/50" />
           </div>
           <div>
-            <Label htmlFor="brand" className="text-base font-semibold mb-2 block">Đến từ đâu?</Label>
-            <Input name="brand" id="brand" defaultValue={initialData?.brand || ''} placeholder="Zara, Local Brand..." className="h-12 bg-white/50" />
+            <Label htmlFor="fit" className="text-base font-semibold mb-2 block">Độ vừa vặn</Label>
+            <div className="relative">
+              <select
+                name="fit"
+                id="fit"
+                defaultValue={initialData?.fit || ''}
+                className="w-full h-12 bg-white/50 border border-input rounded-md px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+              >
+                <option value="" disabled>Chọn lẹ...</option>
+                <option value="Ôm">Ôm (Body)</option>
+                <option value="Vừa vặn">Vừa vặn (Regular)</option>
+                <option value="Form rộng">Form rộng (Relaxed)</option>
+                <option value="Oversize">Oversize (Thùng thình)</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="style" className="text-base font-semibold mb-2 block">Gu gì đây?</Label>
-            <Input name="style" id="style" defaultValue={initialData?.style || ''} placeholder="Bánh bèo, Cá tính..." className="h-12 bg-white/50" />
-          </div>
+        <div className="grid grid-cols-1 gap-4">
           <div>
             <Label htmlFor="color" className="text-base font-semibold mb-2 block">Màu mè ra sao?</Label>
             <Input name="color" id="color" defaultValue={initialData?.color || ''} placeholder="Xanh, Đỏ, Tím..." className="h-12 bg-white/50" />

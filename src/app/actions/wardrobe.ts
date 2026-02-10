@@ -17,8 +17,7 @@ export async function addClothingItem(prevState: any, formData: FormData) {
 
   const name = formData.get('name') as string
   const type = formData.get('type') as string
-  const brand = formData.get('brand') as string
-  const style = formData.get('style') as string
+  const fit = formData.get('fit') as string
   const color = formData.get('color') as string
   const material = formData.get('material') as string
   const seasons = formData.getAll('season') as string[]
@@ -42,8 +41,7 @@ export async function addClothingItem(prevState: any, formData: FormData) {
         userId: session.userId,
         name,
         type,
-        brand,
-        style,
+        fit,
         color,
         material,
         season: seasons,
@@ -148,8 +146,7 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
 
     const name = formData.get('name') as string
     const type = formData.get('type') as string
-    const brand = formData.get('brand') as string
-    const style = formData.get('style') as string
+    const fit = formData.get('fit') as string
     const color = formData.get('color') as string
     const material = formData.get('material') as string
     const seasons = formData.getAll('season') as string[]
@@ -171,8 +168,7 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
         await db.update(clothingItems).set({
             name,
             type,
-            brand,
-            style,
+            fit,
             color,
             material,
             season: seasons,

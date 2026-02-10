@@ -22,8 +22,7 @@ const db = drizzle(client, { schema });
 const PHONE_NUMBER = '0975552087';
 
 const TYPES = ['Áo thun', 'Áo sơ mi', 'Áo khoác', 'Áo len', 'Quần jeans', 'Quần tây', 'Quần short', 'Váy ngắn', 'Váy dài', 'Đầm dự tiệc', 'Giày sneaker', 'Giày cao gót', 'Túi xách', 'Mũ', 'Khuyên tai'];
-const STYLES = ['Casual', 'Formal', 'Vintage', 'Streetwear', 'Minimalist', 'Chic', 'Boho', 'Sporty'];
-const BRANDS = ['Zara', 'H&M', 'Uniqlo', 'Gucci', 'Local Brand', 'No Brand', 'Chanel', 'Adidas', 'Nike'];
+const FITS = ['Form rộng', 'Ôm', 'Oversize', 'Vừa vặn'];
 const COLORS = ['Đen', 'Trắng', 'Đỏ', 'Xanh dương', 'Xanh lá', 'Vàng', 'Hồng', 'Tím', 'Be', 'Nâu', 'Xám'];
 const MATERIALS = ['Cotton', 'Lụa', 'Denim', 'Da', 'Len', 'Linen', 'Polyester'];
 const SEASONS = ['Xuân', 'Hè', 'Thu', 'Đông'];
@@ -43,32 +42,52 @@ function getRandomSeasons() {
 async function main() {
     console.log(`Connecting to DB...`);
     
+    let userId: string;
+
     // 1. Find User
     const user = await db.query.users.findFirst({
         where: eq(schema.users.phoneNumber, PHONE_NUMBER)
     });
 
     if (!user) {
-        console.error(`User with phone number ${PHONE_NUMBER} not found!`);
-        process.exit(1);
+        console.log(`User with phone number ${PHONE_NUMBER} not found. Creating...`);
+        const newUserId = randomUUID();
+        await db.insert(schema.users).values({
+            id: newUserId,
+            phoneNumber: PHONE_NUMBER,
+        });
+        console.log(`Created user: ${newUserId}`);
+        // Refetch user to be sure (or just use newUserId)
+        const newUser = await db.query.users.findFirst({
+             where: eq(schema.users.phoneNumber, PHONE_NUMBER)
+        });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const newUser = await db.query.users.findFirst({
+             where: eq(schema.users.phoneNumber, PHONE_NUMBER)
+        });
+        
+        if (!newUser) throw new Error("Failed to create user");
+        
+        userId = newUser.id;
+    } else {
+        userId = user.id;
     }
 
-    console.log(`Found user: ${user.id}`);
+    console.log(`Using user: ${userId}`);
 
     // 2. Generate 100 Items
     const newItems = [];
     for (let i = 0; i < 100; i++) {
         const type = getRandomItem(TYPES);
         const color = getRandomItem(COLORS);
-        const style = getRandomItem(STYLES);
+        const fit = getRandomItem(FITS);
         
         newItems.push({
             id: randomUUID(),
-            userId: user.id,
-            name: `${type} ${style} ${color}`,
+            userId: userId,
+            name: `${type} ${fit} ${color}`,
             type: type,
-            style: style,
-            brand: getRandomItem(BRANDS),
+            fit: fit,
             color: color,
             material: getRandomItem(MATERIALS),
             season: getRandomSeasons(),
