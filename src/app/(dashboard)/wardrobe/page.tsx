@@ -59,7 +59,7 @@ function WardrobeContent() {
 
   const handleDelete = async (id: string) => {
     if (!user) return
-    if (confirm('Bạn có chắc muốn xoá món này không?')) {
+    if (confirm('Bạn có chắc chắn muốn xóa món đồ này?')) {
       await deleteClothingItem(id, user.id)
       // Refresh local state to avoid full reload
       setItems(prev => prev.filter(item => item.id !== id))
@@ -88,7 +88,7 @@ function WardrobeContent() {
       <div className="mb-4">
         <Link href="/">
           <Button variant="ghost" size="sm" className="-ml-3 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-5 h-5 mr-1" /> Quay lại Home
+            <ArrowLeft className="w-5 h-5 mr-1" /> Về trang chủ
           </Button>
         </Link>
       </div>
@@ -96,13 +96,13 @@ function WardrobeContent() {
       <div className="flex items-center justify-between mb-6">
         <div className='flex items-center gap-2'>
           <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
-            <Shirt className="w-6 h-6" />
+            <Shirt className="w-6 h-6" strokeWidth={1.5} />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Lãnh địa quần áo</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Tủ đồ của tôi</h1>
         </div>
         <Link href="/wardrobe/add">
           <Button className="rounded-full shadow-soft hover:shadow-soft-hover bg-primary text-primary-foreground font-semibold px-4 h-9 text-sm">
-            <Plus className="w-4 h-4 mr-1" /> Thêm mới
+            <Plus className="w-4 h-4 mr-1" /> Thêm món mới
           </Button>
         </Link>
       </div>
@@ -114,13 +114,13 @@ function WardrobeContent() {
           <div className="w-40 h-40 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft-hover text-pink-500">
             <ShoppingBag className="w-20 h-20" strokeWidth={1.5} />
           </div>
-          <h3 className="text-2xl font-bold mb-3 text-foreground">Tủ đồ chưa có gì nè</h3>
+          <h3 className="text-2xl font-bold mb-3 text-foreground">Tủ đồ đang trống</h3>
           <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
-            Thêm vài món đồ để mình gợi ý cho bạn nhé 💗
+            Hãy thêm trang phục để nhận gợi ý phối đồ nhé 💗
           </p>
           <Link href="/wardrobe/add">
             <Button size="lg" className="rounded-full text-lg h-14 px-8 shadow-soft hover:shadow-soft-hover font-bold">
-              Thêm món đầu tiên
+              Thêm trang phục ngay
             </Button>
           </Link>
         </div>
@@ -163,7 +163,7 @@ function WardrobeContent() {
               <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
                 <Link href={`/wardrobe/edit/${item.id}`}>
                   <Button variant="ghost" size="icon-sm" className="h-8 w-8 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-primary hover:text-white transition-colors">
-                    <Pencil className="w-4 h-4" />
+                    <Pencil className="w-4 h-4" strokeWidth={1.5} />
                   </Button>
                 </Link>
                 <Button
@@ -172,7 +172,7 @@ function WardrobeContent() {
                   className="h-8 w-8 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-destructive hover:text-white transition-colors"
                   onClick={() => handleDelete(item.id)}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4" strokeWidth={1.5} />
                 </Button>
               </div>
             </div>

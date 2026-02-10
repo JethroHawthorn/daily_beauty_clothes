@@ -87,15 +87,15 @@ export default function SuggestPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-50 border-2 border-rose-100 shadow-sm mb-2 text-rose-500">
               <Sparkles className="w-10 h-10" strokeWidth={1.5} />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">Thần thái đại nhân</h1>
-            <p className="text-muted-foreground text-sm px-4">Đừng để ngày trôi qua nhạt nhòa. <br />Hôm nay bạn muốn mặc style gì nè? ✨</p>
+            <h1 className="text-2xl font-bold tracking-tight">Hôm nay mặc gì?</h1>
+            <p className="text-muted-foreground text-sm px-4">Hãy chọn phong cách bạn muốn cho ngày hôm nay ✨</p>
           </div>
 
           <form action={action} className="space-y-6">
             <input type="hidden" name="userId" value={user?.id || ''} />
             <div className="space-y-4">
               <div className="relative">
-                <Label htmlFor="purpose" className="sr-only">Mục đích</Label>
+                <Label htmlFor="purpose" className="sr-only">Dịp / Hoàn cảnh</Label>
                 <Input
                   name="purpose"
                   list="purposes"
@@ -105,18 +105,18 @@ export default function SuggestPage() {
                   className="h-14 text-base px-6 rounded-2xl shadow-sm border-input bg-white focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 <datalist id="purposes">
-                  <option value="Đi làm kiếm cơm" />
-                  <option value="Đi cháy phố" />
-                  <option value="Hẹn hò lãng mạn" />
-                  <option value="Ăn đám cưới người yêu cũ" />
-                  <option value="Trà chiều chanh sả" />
-                  <option value="Về quê nuôi cá" />
+                  <option value="Đi làm" />
+                  <option value="Dạo phố" />
+                  <option value="Hẹn hò" />
+                  <option value="Dự tiệc / Đám cưới" />
+                  <option value="Cafe / Trà chiều" />
+                  <option value="Du lịch / Dã ngoại" />
                 </datalist>
               </div>
             </div>
 
             <Button className="w-full h-14 text-lg rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all hover:scale-[1.02]" disabled={isPending}>
-              Biến hình! 🧚‍♀️
+              Gợi ý phối đồ 🧚‍♀️
             </Button>
             {state?.error && <p className="text-destructive text-center text-sm font-medium bg-destructive/10 p-3 rounded-lg">{state.error}</p>}
           </form>
@@ -152,7 +152,7 @@ export default function SuggestPage() {
 
             <div className="bg-muted/30 p-5 rounded-xl relative">
               <div className="absolute -top-2 -left-2 text-muted-foreground/20">
-                <Quote className="w-6 h-6 rotate-180" />
+                <Quote className="w-6 h-6 rotate-180" strokeWidth={1.5} />
               </div>
               <p className="text-foreground/80 italic leading-relaxed relative z-10 text-sm px-2">
                 {state.suggestion.reason}
@@ -163,7 +163,7 @@ export default function SuggestPage() {
           <div className="flex flex-col gap-3">
             {showClosingMessage ? (
               <div className="text-center py-6 animate-in fade-in zoom-in duration-500">
-                <Heart className="w-12 h-12 text-rose-400 mx-auto mb-4 animate-pulse" />
+                <Heart className="w-12 h-12 text-rose-400 mx-auto mb-4 animate-pulse" strokeWidth={1.5} />
                 <p className="text-lg font-medium text-foreground/90">
                   {closingMessage}
                 </p>
@@ -171,7 +171,7 @@ export default function SuggestPage() {
             ) : (
               <>
                 <Button className="w-full h-14 rounded-full shadow-soft hover:shadow-soft-hover bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg transition-transform active:scale-95" onClick={handleSave} disabled={saving}>
-                  {saving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : '✅ Mình sẽ mặc bộ này'}
+                  {saving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : '❤️ Chọn bộ này'}
                 </Button>
                 <Button variant="ghost" className="w-full h-12 rounded-full font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50" onClick={() => window.location.reload()}>
                   Gợi ý khác ↻

@@ -17,13 +17,13 @@ export default function AddClothingPage() {
       <div className="mb-6">
         <Link href="/wardrobe">
           <Button variant="ghost" size="sm" className="-ml-3 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-5 h-5 mr-1" /> Quay xe
+            <ArrowLeft className="w-5 h-5 mr-1" strokeWidth={1.5} /> Quay lại
           </Button>
         </Link>
       </div>
 
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Khoe món mới ✨</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Thêm trang phục mới ✨</h1>
       </div>
 
       <ClothingItemForm action={addClothingItem} />
