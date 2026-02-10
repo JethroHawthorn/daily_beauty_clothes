@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Loader2, ArrowLeft, Sparkles, Quote, Heart } from 'lucide-react'
 import Link from 'next/link'
 
+import { useUser } from '@/hooks/use-user'
+
 const CLOSING_MESSAGES = [
   "Chúc bạn có một ngày dễ thương nhé 💗",
   "Hy vọng hôm nay bạn cảm thấy tự tin hơn một chút.",
@@ -21,6 +23,7 @@ export default function SuggestPage() {
   const [saving, setSaving] = useState(false)
   const [showClosingMessage, setShowClosingMessage] = useState(false)
   const [closingMessage, setClosingMessage] = useState("")
+  const { user } = useUser(true)
 
   // Smart Pre-select Logic
   const today = new Date().getDay();
@@ -29,15 +32,17 @@ export default function SuggestPage() {
 
   // Helper to trigger save with emotional closure
   const handleSave = async () => {
-    if (!state?.suggestion || !state?.purpose) return
+    if (!state?.suggestion || !state?.purpose || !user) return
     setSaving(true)
     setClosingMessage(CLOSING_MESSAGES[Math.floor(Math.random() * CLOSING_MESSAGES.length)])
     setShowClosingMessage(true)
     // Brief delay to show the message before redirect
     setTimeout(async () => {
-      await saveToHistory(state.suggestion, state.weather, state.purpose)
+      await saveToHistory(state.suggestion, state.weather, state.purpose, user.id)
     }, 1500)
   }
+
+  if (!user) return null // or loading spinner, useUser handles redirect
 
   return (
     <div className="container mx-auto p-4 max-w-lg pb-24">
@@ -87,6 +92,7 @@ export default function SuggestPage() {
           </div>
 
           <form action={action} className="space-y-6">
+            <input type="hidden" name="userId" value={user?.id || ''} />
             <div className="space-y-4">
               <div className="relative">
                 <Label htmlFor="purpose" className="sr-only">Mục đích</Label>

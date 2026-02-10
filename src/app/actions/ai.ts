@@ -3,7 +3,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { db } from '@/lib/db'
 import { clothingItems, histories } from '@/db/schema'
-import { verifySession } from '@/lib/session'
 import { getWeather } from '@/lib/weather'
 import { eq, gte, and } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
@@ -24,14 +23,14 @@ interface WeatherData {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateOutfit(prevState: any, formData: FormData) {
-  const session = await verifySession()
-  if (!session) redirect('/login')
+  const userId = formData.get('userId') as string
+  if (!userId) return { error: "Bạn chưa đăng nhập" }
 
   const purpose = formData.get('purpose') as string
   
   // Get User Wardrobe
   const items = await db.query.clothingItems.findMany({
-      where: eq(clothingItems.userId, session.userId)
+      where: eq(clothingItems.userId, userId)
   })
 
   // Get Recent History (Last 7 days for better rotation)
@@ -41,7 +40,7 @@ export async function generateOutfit(prevState: any, formData: FormData) {
 
   const recentHistory = await db.query.histories.findMany({
       where: and(
-          eq(histories.userId, session.userId),
+          eq(histories.userId, userId),
           gte(histories.date, dateString)
       ),
       columns: { combo: true, date: true }
@@ -69,7 +68,7 @@ export async function generateOutfit(prevState: any, formData: FormData) {
   }
 
   // Construct Prompt
-  const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.style})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
+  const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.fit})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
   
   const prompt = `
     Bạn là stylist cá nhân thân thiện, tinh tế và nói chuyện rất đời thường.
@@ -135,9 +134,8 @@ export async function generateOutfit(prevState: any, formData: FormData) {
   return { success: true, suggestion: resultJson, weather, purpose }
 }
 
-export async function quickSuggest() {
-    const session = await verifySession()
-    if (!session) redirect('/login')
+export async function quickSuggest(userId: string) {
+    if (!userId) return { error: "Bạn chưa đăng nhập" }
 
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -145,7 +143,7 @@ export async function quickSuggest() {
     const purpose = isWeekend ? "Đi chơi cuối tuần" : "Đi làm/Đi học";
 
     const items = await db.query.clothingItems.findMany({
-        where: eq(clothingItems.userId, session.userId)
+        where: eq(clothingItems.userId, userId)
     })
 
     // Get Recent History (Last 3 days)
@@ -155,7 +153,7 @@ export async function quickSuggest() {
 
     const recentHistory = await db.query.histories.findMany({
         where: and(
-            eq(histories.userId, session.userId),
+            eq(histories.userId, userId),
             gte(histories.date, dateString)
         ),
         columns: { combo: true }
@@ -172,7 +170,7 @@ export async function quickSuggest() {
       return { error: "Bạn cần thêm quần áo vào tủ đồ trước!" }
   }
 
-   const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.style})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
+   const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.fit})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
 
     const prompt = `
     Bạn là stylist cá nhân thân thiện.
@@ -222,13 +220,12 @@ export async function quickSuggest() {
     }
 }
 
-export async function saveToHistory(suggestion: OutfitSuggestion, weather: WeatherData, purpose: string) {
-    const session = await verifySession()
-    if (!session) redirect('/login')
+export async function saveToHistory(suggestion: OutfitSuggestion, weather: WeatherData, purpose: string, userId: string) {
+    if (!userId) redirect('/login')
     
     await db.insert(histories).values({
         id: randomUUID(),
-        userId: session.userId,
+        userId,
         date: new Date().toISOString().split('T')[0],
         purpose,
         combo: suggestion, // Drizzle handles JSON stringify if mode: json

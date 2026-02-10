@@ -6,18 +6,27 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { quickSuggest, saveToHistory } from '@/app/actions/ai'
 import { Sparkles, Loader2, Check } from 'lucide-react'
 
+import { useUser } from '@/hooks/use-user'
+
 export function QuickAction() {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const { user } = useUser(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [result, setResult] = useState<any>(null)
 
   const handleQuickAction = async () => {
+    if (!user) {
+      // Redirect to login if not available? or just alert?
+      // Since we are on client, we can likely rely on useUser internal check or router push
+      window.location.href = '/login'
+      return
+    }
     setIsOpen(true)
     setIsLoading(true)
     setResult(null)
 
-    const response = await quickSuggest();
+    const response = await quickSuggest(user.id);
 
     if (response.success) {
       setResult(response)
@@ -29,8 +38,8 @@ export function QuickAction() {
   }
 
   const handleSave = async () => {
-    if (result && result.success) {
-      await saveToHistory(result.suggestion, result.weather, result.purpose)
+    if (result && result.success && user) {
+      await saveToHistory(result.suggestion, result.weather, result.purpose, user.id)
     }
   }
 
