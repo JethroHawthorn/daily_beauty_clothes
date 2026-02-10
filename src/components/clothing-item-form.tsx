@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { useUser } from '@/hooks/use-user'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,24 +27,40 @@ type Props = {
 export function ClothingItemForm({ action, initialData, submitLabel = 'Nạp vào kho!', pendingLabel = 'Đang nhét vào tủ...' }: Props) {
   const [state, formAction, isPending] = useActionState(action, undefined)
   const { user } = useUser(false) // Don't redirect, just load
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.imageUrl || null)
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+    }
+  }
 
   return (
     <form action={formAction} className="space-y-8">
       <input type="hidden" name="userId" value={user?.id || ''} />
       {/* Image Upload Area */}
       <div className="relative aspect-square w-full rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-muted/10 hover:bg-muted/20 transition-colors group cursor-pointer overflow-hidden">
-        <input name="image" id="image" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer" />
+        <input
+          name="image"
+          id="image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+        />
 
-        {initialData?.imageUrl ? (
-          <Image src={initialData.imageUrl} alt="Current" fill className="object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-        ) : null}
-
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground pointer-events-none">
-          <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 transition-transform z-20">
-            <Camera className="w-8 h-8 opacity-80" strokeWidth={1.5} />
+        {previewUrl ? (
+          <Image src={previewUrl} alt="Preview" fill className="object-cover opacity-100 transition-opacity" />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground pointer-events-none">
+            <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 transition-transform z-20">
+              <Camera className="w-8 h-8 opacity-80" strokeWidth={1.5} />
+            </div>
+            <span className="text-sm font-medium bg-white/50 backdrop-blur-sm rounded-full px-3 py-1 z-20">Chạm nhẹ để khoe ảnh</span>
           </div>
-          <span className="text-sm font-medium bg-white/50 backdrop-blur-sm rounded-full px-3 py-1 z-20">Chạm nhẹ để khoe ảnh</span>
-        </div>
+        )}
       </div>
 
       <div className="space-y-5">

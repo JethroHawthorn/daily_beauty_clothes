@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Trash2, Plus, ArrowLeft, Shirt, ShoppingBag, ImageOff, Pencil } from 'lucide-react'
 import { FavoriteButton } from '@/components/favorite-button'
 import { WardrobeFilters } from '@/components/wardrobe-filters'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useUser } from '@/hooks/use-user'
 
@@ -27,7 +27,7 @@ type ClothingItem = {
   updatedAt: Date
 }
 
-export default function WardrobePage() {
+function WardrobeContent() {
   const searchParams = useSearchParams()
   // Use custom hook for auth
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -180,5 +180,13 @@ export default function WardrobePage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function WardrobePage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="animate-spin text-4xl">🌸</div></div>}>
+      <WardrobeContent />
+    </Suspense>
   )
 }

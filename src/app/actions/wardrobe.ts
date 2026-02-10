@@ -5,8 +5,7 @@ import { clothingItems } from '@/db/schema'
 import { revalidatePath } from 'next/cache'
 import { randomUUID } from 'crypto'
 import { eq, desc, and, sql } from 'drizzle-orm'
-import fs from 'fs'
-import path from 'path'
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function addClothingItem(prevState: any, formData: FormData) {
@@ -21,17 +20,8 @@ export async function addClothingItem(prevState: any, formData: FormData) {
   const seasons = formData.getAll('season') as string[]
   const imageFile = formData.get('image') as File
 
-  let imageUrl = ''
-  if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
-      const buffer = Buffer.from(await imageFile.arrayBuffer())
-      const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
-      const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-      if (!fs.existsSync(uploadDir)) {
-          fs.mkdirSync(uploadDir, { recursive: true })
-      }
-      fs.writeFileSync(path.join(uploadDir, filename), buffer)
-      imageUrl = `/uploads/${filename}`
-  }
+  // Image upload removed
+  const imageUrl = ''
 
   try {
      await db.insert(clothingItems).values({
@@ -146,17 +136,8 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
     const seasons = formData.getAll('season') as string[]
     const imageFile = formData.get('image') as File
 
-    let imageUrl = undefined // undefined means don't update
-    if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
-        const buffer = Buffer.from(await imageFile.arrayBuffer())
-        const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true })
-        }
-        fs.writeFileSync(path.join(uploadDir, filename), buffer)
-        imageUrl = `/uploads/${filename}`
-    }
+  // Image upload removed
+  const imageUrl = undefined
 
     try {
         await db.update(clothingItems).set({
@@ -166,7 +147,7 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
             color,
             material,
             season: seasons,
-            ...(imageUrl && { imageUrl }), // Only update if new image uploaded
+            // imageUrl removed
         }).where(
             and(
                 eq(clothingItems.id, id),
