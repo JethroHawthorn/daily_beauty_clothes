@@ -5,6 +5,8 @@ import { generateOutfit, saveToHistory } from '@/app/actions/ai'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { OutfitPreviewSkeleton } from '@/components/outfit-preview-skeleton'
+
 
 import { Loader2, ArrowLeft, Sparkles, Quote, Heart } from 'lucide-react'
 import Link from 'next/link'
@@ -126,7 +128,13 @@ export default function SuggestPage() {
       {/* RESULT STATE */}
       {!isPending && state?.success && state.suggestion && (
         <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-700">
-          <div className="bg-white p-6 rounded-[2rem] shadow-soft border border-border/50 relative overflow-hidden">
+
+          <div className="flex justify-center -mb-4 relative z-10">
+            <OutfitPreviewSkeleton outfit={state.suggestion.outfit} />
+          </div>
+
+          <div className="bg-white p-6 rounded-[2rem] shadow-soft border border-border/50 relative overflow-hidden pt-12">
+
 
             <div className="flex justify-between items-start mb-6 mt-2">
               <div>

@@ -13,7 +13,14 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 interface OutfitSuggestion {
   items: string[];
   reason: string;
+  outfit?: {
+    top?: any;
+    bottom?: any;
+    shoes?: any;
+    outerwear?: any;
+  }
 }
+
 
 interface WeatherData {
   temp: number;
@@ -130,6 +137,58 @@ export async function generateOutfit(prevState: any, formData: FormData) {
     const text = response.text();
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     resultJson = JSON.parse(jsonText);
+    // Map back to DB items and categorize
+    const normalizeName = (name: string) => name.toLowerCase().trim();
+    const dbItemsMap = new Map(items.map(i => [normalizeName(i.name), i]));
+
+    const outfit: any = { top: undefined, bottom: undefined, shoes: undefined, outerwear: undefined };
+
+    // Helper to categorise
+    const categorizeItem = (type: string) => {
+        const t = type.toLowerCase();
+        if (['áo', 'shirt', 't-shirt', 'blouse', 'croptop', 'top', 'váy', 'dress'].some(k => t.includes(k))) return 'top';
+        if (['quần', 'pants', 'jeans', 'chân váy', 'skirt', 'short'].some(k => t.includes(k))) return 'bottom';
+        if (['giày', 'shoes', 'sneaker', 'boots', 'dép', 'sandal'].some(k => t.includes(k))) return 'shoes';
+        if (['khoác', 'jacket', 'coat', 'blazer', 'cardigan', 'vest'].some(k => t.includes(k))) return 'outerwear';
+        return 'other';
+    }
+
+    if (resultJson && resultJson.items) {
+        // Try to match exact names first
+        resultJson.items.forEach((suggestedName: string) => {
+             // Find best match in DB items (simple contains check or exact match)
+             const match = items.find(i => normalizeName(i.name) === normalizeName(suggestedName)) 
+                || items.find(i => normalizeName(i.name).includes(normalizeName(suggestedName)) || normalizeName(suggestedName).includes(normalizeName(i.name)));
+             
+             if (match) {
+                 const category = categorizeItem(match.type);
+                 if (category !== 'other' && !outfit[category]) {
+                     outfit[category] = {
+                         id: match.id,
+                         name: match.name,
+                         imageUrl: match.imageUrl,
+                         color: match.color,
+                         type: match.type
+                     };
+                 } else if (category === 'top' && outfit.top) {
+                      // If top already exists, maybe this is outerwear?
+                      // Simple heuristic: if it has "khoác" or "jacket", move to outerwear
+                      if (categorizeItem(match.type) === 'outerwear') {
+                          outfit.outerwear = {
+                             id: match.id,
+                             name: match.name,
+                             imageUrl: match.imageUrl,
+                             color: match.color,
+                             type: match.type
+                          }
+                      }
+                 }
+             }
+        });
+        
+        resultJson.outfit = outfit;
+    }
+
   } catch (e) {
       console.error("Gemini Error", e)
       return { error: "Không thể kết nối với AI Stylist. Vui lòng thử lại." }
