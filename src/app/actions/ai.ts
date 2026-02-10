@@ -68,7 +68,11 @@ export async function generateOutfit(prevState: any, formData: FormData) {
   }
 
   // Construct Prompt
-  const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.fit})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
+  const clothingList = items.map(i => {
+      const mainPart = [i.type, i.color].filter(Boolean).join(' ')
+      const fitPart = i.fit ? ` (${i.fit})` : ''
+      return `- ${mainPart}${fitPart}${i.isFavorite ? ' [YÊU THÍCH]' : ''}`
+  }).join('\n')
   
   const prompt = `
     Bạn là stylist cá nhân thân thiện, tinh tế và nói chuyện rất đời thường.
@@ -170,7 +174,11 @@ export async function quickSuggest(userId: string) {
       return { error: "Bạn cần thêm quần áo vào tủ đồ trước!" }
   }
 
-   const clothingList = items.map(i => `- ${i.name} (${i.color} ${i.type}, ${i.fit})${i.isFavorite ? ' [YÊU THÍCH]' : ''}`).join('\n')
+   const clothingList = items.map(i => {
+       const mainPart = [i.type, i.color].filter(Boolean).join(' ')
+       const fitPart = i.fit ? ` (${i.fit})` : ''
+       return `- ${mainPart}${fitPart}${i.isFavorite ? ' [YÊU THÍCH]' : ''}`
+   }).join('\n')
 
     const prompt = `
     Bạn là stylist cá nhân thân thiện.

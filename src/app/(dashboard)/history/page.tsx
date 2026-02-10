@@ -1,21 +1,50 @@
+'use client'
+
 import { getHistory } from '@/app/actions/history'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowLeft, CalendarHeart, Calendar, History } from 'lucide-react'
+import { useUser } from '@/hooks/use-user'
+import { useEffect, useState } from 'react'
 
+// Define the type based on what getHistory returns (inferred or explicit)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type HistoryItem = any;
 
-export default async function HistoryPage() {
-  const history = await getHistory()
+export default function HistoryPage() {
+  const { user } = useUser(true)
+  const [history, setHistory] = useState<HistoryItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (!user) return
+
+    const fetchData = async () => {
+      const data = await getHistory(user.id)
+      setHistory(data)
+      setIsLoading(false)
+    }
+    fetchData()
+  }, [user])
+
 
   // Group history by date string
-  const groupedHistory = history.reduce((groups, item) => {
+  const groupedHistory = history.reduce((groups: Record<string, HistoryItem[]>, item: HistoryItem) => {
     const date = new Date(item.date).toLocaleDateString("vi-VN", { weekday: 'short', day: 'numeric', month: 'long' });
     if (!groups[date]) {
       groups[date] = [];
     }
     groups[date].push(item);
     return groups;
-  }, {} as Record<string, typeof history>);
+  }, {} as Record<string, HistoryItem[]>);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin text-4xl">🌸</div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto p-4 max-w-lg pb-24">
