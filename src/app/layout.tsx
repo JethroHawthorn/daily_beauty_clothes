@@ -25,13 +25,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Daily Beauty Clothes",
   description: "Quản lý tủ đồ & gợi ý phối đồ bằng AI",
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "StyleMate",
   },
 };
+
+import { PwaInit } from "@/components/pwa-init";
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body
         className={`${jakarta.variable} ${inter.variable} font-sans antialiased`}
       >
+        <PwaInit />
         {children}
       </body>
     </html>

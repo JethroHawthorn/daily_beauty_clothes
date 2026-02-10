@@ -27,5 +27,5 @@ export async function proxy(request: NextRequest) {
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sw.js|workbox-|manifest.json|.*\\.png|.*\\.svg).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sw.js|workbox-|manifest.json|manifest.webmanifest|.*\\.png|.*\\.svg).*)'],
 }
