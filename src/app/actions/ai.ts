@@ -9,10 +9,10 @@ import { redirect } from 'next/navigation'
 import { randomUUID } from 'crypto'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
-
 interface OutfitSuggestion {
   items: string[];
   reason: string;
+  selected_ids?: string[];
   outfit?: {
     top?: any;
     bottom?: any;
@@ -20,6 +20,8 @@ interface OutfitSuggestion {
     outerwear?: any;
   }
 }
+
+
 
 
 interface WeatherData {
@@ -76,9 +78,10 @@ export async function generateOutfit(prevState: any, formData: FormData) {
 
   // Construct Prompt
   const clothingList = items.map(i => {
-      const mainPart = [i.type, i.color].filter(Boolean).join(' ')
+      const mainPart = i.name
+      const detailPart = [i.type, i.color].filter(Boolean).join(' ')
       const fitPart = i.fit ? ` (${i.fit})` : ''
-      return `- ${mainPart}${fitPart}${i.isFavorite ? ' [YÊU THÍCH]' : ''}`
+      return `- (ID: ${i.id}) ${mainPart} [${detailPart}${fitPart}]${i.isFavorite ? ' [YÊU THÍCH]' : ''}`
   }).join('\n')
   
   const prompt = `
@@ -120,11 +123,11 @@ export async function generateOutfit(prevState: any, formData: FormData) {
     Tông giọng:
     - Nhẹ nhàng, gợi mở ("Bạn thử kết hợp...", "Combo này khá hợp với...").
     - Giải thích CỰC KỲ NGẮN GỌN (1-2 câu), tập trung cảm giác thực tế.
-
-    Trả về JSON ONLY: { "items": ["Tên chính xác từ danh sách", "Tên chính xác 2"], "reason": "Lý do..." }
+ 
+    Trả về JSON ONLY: { "selected_ids": ["ID_ITEM_1", "ID_ITEM_2"], "reason": "Lý do..." }
   `
 
-  let resultJson = null;
+  let resultJson: OutfitSuggestion | null = null;
 
   if (!process.env.GEMINI_API_KEY) {
       return { error: "Thiếu cấu hình GEMINI_API_KEY" }
@@ -138,53 +141,64 @@ export async function generateOutfit(prevState: any, formData: FormData) {
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     resultJson = JSON.parse(jsonText);
     // Map back to DB items and categorize
-    const normalizeName = (name: string) => name.toLowerCase().trim();
-    const dbItemsMap = new Map(items.map(i => [normalizeName(i.name), i]));
-
     const outfit: any = { top: undefined, bottom: undefined, shoes: undefined, outerwear: undefined };
 
     // Helper to categorise
     const categorizeItem = (type: string) => {
         const t = type.toLowerCase();
-        if (['áo', 'shirt', 't-shirt', 'blouse', 'croptop', 'top', 'váy', 'dress'].some(k => t.includes(k))) return 'top';
         if (['quần', 'pants', 'jeans', 'chân váy', 'skirt', 'short'].some(k => t.includes(k))) return 'bottom';
+        if (['áo', 'shirt', 't-shirt', 'blouse', 'croptop', 'top', 'váy', 'dress'].some(k => t.includes(k))) return 'top';
         if (['giày', 'shoes', 'sneaker', 'boots', 'dép', 'sandal'].some(k => t.includes(k))) return 'shoes';
         if (['khoác', 'jacket', 'coat', 'blazer', 'cardigan', 'vest'].some(k => t.includes(k))) return 'outerwear';
         return 'other';
     }
 
-    if (resultJson && resultJson.items) {
-        // Try to match exact names first
-        resultJson.items.forEach((suggestedName: string) => {
-             // Find best match in DB items (simple contains check or exact match)
-             const match = items.find(i => normalizeName(i.name) === normalizeName(suggestedName)) 
-                || items.find(i => normalizeName(i.name).includes(normalizeName(suggestedName)) || normalizeName(suggestedName).includes(normalizeName(i.name)));
+    if (resultJson) {
+         let selectedItems: typeof items = [];
+
+         // Strategy 1: Match by IDs (Preferred)
+         if (resultJson.selected_ids && Array.isArray(resultJson.selected_ids)) {
+             const selectedIds = resultJson.selected_ids;
+             selectedItems = items.filter(i => selectedIds.includes(i.id));
+         } 
+         // Strategy 2: Match by Name (Fallback)
+         else if (resultJson.items && Array.isArray(resultJson.items)) {
+             const normalizeName = (name: string) => name.toLowerCase().trim();
+             const jsonItems = resultJson.items;
+             jsonItems.forEach((suggestedName: string) => {
+                 const match = items.find(i => normalizeName(i.name) === normalizeName(suggestedName)) 
+                    || items.find(i => normalizeName(i.name).includes(normalizeName(suggestedName)));
+                 if (match) selectedItems.push(match);
+             });
+         }
+
+         // Populate Outfit & names
+         if (selectedItems.length > 0) {
+             resultJson.items = selectedItems.map(i => i.name); // Ensure names correspond to found items
              
-             if (match) {
-                 const category = categorizeItem(match.type);
+             selectedItems.forEach(item => {
+                 const category = categorizeItem(item.type);
                  if (category !== 'other' && !outfit[category]) {
                      outfit[category] = {
-                         id: match.id,
-                         name: match.name,
-                         imageUrl: match.imageUrl,
-                         color: match.color,
-                         type: match.type
+                         id: item.id,
+                         name: item.name,
+                         imageUrl: item.imageUrl,
+                         color: item.color,
+                         type: item.type
                      };
                  } else if (category === 'top' && outfit.top) {
-                      // If top already exists, maybe this is outerwear?
-                      // Simple heuristic: if it has "khoác" or "jacket", move to outerwear
-                      if (categorizeItem(match.type) === 'outerwear') {
+                      if (categorizeItem(item.type) === 'outerwear') {
                           outfit.outerwear = {
-                             id: match.id,
-                             name: match.name,
-                             imageUrl: match.imageUrl,
-                             color: match.color,
-                             type: match.type
+                             id: item.id,
+                             name: item.name,
+                             imageUrl: item.imageUrl,
+                             color: item.color,
+                             type: item.type
                           }
                       }
                  }
-             }
-        });
+             });
+         }
         
         resultJson.outfit = outfit;
     }
@@ -234,9 +248,10 @@ export async function quickSuggest(userId: string) {
   }
 
    const clothingList = items.map(i => {
-       const mainPart = [i.type, i.color].filter(Boolean).join(' ')
+       const mainPart = i.name
+       const detailPart = [i.type, i.color].filter(Boolean).join(' ')
        const fitPart = i.fit ? ` (${i.fit})` : ''
-       return `- ${mainPart}${fitPart}${i.isFavorite ? ' [YÊU THÍCH]' : ''}`
+       return `- ${mainPart} [${detailPart}${fitPart}]${i.isFavorite ? ' [YÊU THÍCH]' : ''}`
    }).join('\n')
 
     const prompt = `

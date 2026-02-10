@@ -40,7 +40,9 @@ export default function SuggestPage() {
     setShowClosingMessage(true)
     // Brief delay to show the message before redirect
     setTimeout(async () => {
-      await saveToHistory(state.suggestion, state.weather, state.purpose, user.id)
+      if (state.suggestion) {
+        await saveToHistory(state.suggestion, state.weather, state.purpose, user.id)
+      }
     }, 1500)
   }
 
