@@ -2,18 +2,16 @@
 
 import { db } from '@/lib/db'
 import { clothingItems } from '@/db/schema'
-import { verifySession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
 import { randomUUID } from 'crypto'
 import { eq, desc, and, sql } from 'drizzle-orm'
-import { redirect } from 'next/navigation'
 import fs from 'fs'
 import path from 'path'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function addClothingItem(prevState: any, formData: FormData) {
-  const session = await verifySession()
-  if (!session) redirect('/login')
+  const userId = formData.get('userId') as string
+  if (!userId) return { errors: { _form: "Bạn chưa đăng nhập" } }
 
   const name = formData.get('name') as string
   const type = formData.get('type') as string
@@ -38,7 +36,7 @@ export async function addClothingItem(prevState: any, formData: FormData) {
   try {
      await db.insert(clothingItems).values({
         id: randomUUID(),
-        userId: session.userId,
+        userId,
         name,
         type,
         fit,
@@ -62,12 +60,11 @@ export type WardrobeFilters = {
     isFavorite?: boolean
 }
 
-export async function getClothingItems(filters?: WardrobeFilters) {
-    const session = await verifySession()
-    if (!session) return []
+export async function getClothingItems(userId: string, filters?: WardrobeFilters) {
+    if (!userId) return []
     
     try {
-      const conditions = [eq(clothingItems.userId, session.userId)]
+      const conditions = [eq(clothingItems.userId, userId)]
       
       if (filters?.search) {
           conditions.push(sql`lower(${clothingItems.name}) LIKE ${`%${filters.search.toLowerCase()}%`}`)
@@ -97,43 +94,40 @@ export async function getClothingItems(filters?: WardrobeFilters) {
     }
 }
 
-export async function deleteClothingItem(id: string) {
-    const session = await verifySession()
-    if (!session) redirect('/login')
-    
+export async function deleteClothingItem(id: string, userId: string) {
+    if (!userId) return
+
     // Ensure user owns the item
     await db.delete(clothingItems).where(
         and(
             eq(clothingItems.id, id),
-            eq(clothingItems.userId, session.userId)
+            eq(clothingItems.userId, userId)
         )
     )
     revalidatePath('/wardrobe')
 }
 
-export async function toggleFavorite(id: string, isFavorite: boolean) {
-    const session = await verifySession()
-    if (!session) redirect('/login')
+export async function toggleFavorite(id: string, isFavorite: boolean, userId: string) {
+    if (!userId) return
     
     await db.update(clothingItems)
         .set({ isFavorite: isFavorite })
         .where(
             and(
                 eq(clothingItems.id, id),
-                eq(clothingItems.userId, session.userId)
+                eq(clothingItems.userId, userId)
             )
         )
     revalidatePath('/wardrobe')
 }
 
-export async function getClothingItem(id: string) {
-    const session = await verifySession()
-    if (!session) return null
+export async function getClothingItem(id: string, userId: string) {
+    if (!userId) return null
 
     const item = await db.query.clothingItems.findFirst({
         where: and(
             eq(clothingItems.id, id),
-            eq(clothingItems.userId, session.userId)
+            eq(clothingItems.userId, userId)
         )
     })
     return item
@@ -141,8 +135,8 @@ export async function getClothingItem(id: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateClothingItem(id: string, prevState: any, formData: FormData) {
-    const session = await verifySession()
-    if (!session) redirect('/login')
+    const userId = formData.get('userId') as string
+    if (!userId) return { errors: { _form: "Bạn chưa đăng nhập" } }
 
     const name = formData.get('name') as string
     const type = formData.get('type') as string
@@ -176,7 +170,7 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
         }).where(
             and(
                 eq(clothingItems.id, id),
-                eq(clothingItems.userId, session.userId)
+                eq(clothingItems.userId, userId)
             )
         )
         revalidatePath('/wardrobe')

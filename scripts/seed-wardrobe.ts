@@ -61,10 +61,6 @@ async function main() {
         const newUser = await db.query.users.findFirst({
              where: eq(schema.users.phoneNumber, PHONE_NUMBER)
         });
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const newUser = await db.query.users.findFirst({
-             where: eq(schema.users.phoneNumber, PHONE_NUMBER)
-        });
         
         if (!newUser) throw new Error("Failed to create user");
         

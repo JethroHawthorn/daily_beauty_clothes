@@ -4,8 +4,6 @@ import { z } from 'zod'
 import { db } from '@/lib/db'
 import { users } from '@/db/schema'
 import { eq } from 'drizzle-orm'
-import { createSession } from '@/lib/session'
-import { redirect } from 'next/navigation'
 import { randomUUID } from 'crypto'
 
 const loginSchema = z.object({
@@ -45,6 +43,12 @@ export async function login(prevState: any, formData: FormData) {
     user = { id: userId, phoneNumber, createdAt: new Date(), updatedAt: new Date() } as any
   }
 
-  await createSession(user!.id)
-  redirect('/')
+  // Return user for client-side storage
+  return {
+    success: true,
+    user: {
+      id: user!.id,
+      phoneNumber: user!.phoneNumber
+    }
+  }
 }

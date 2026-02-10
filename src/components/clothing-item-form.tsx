@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
+import { useUser } from '@/hooks/use-user'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -25,9 +26,11 @@ type Props = {
 
 export function ClothingItemForm({ action, initialData, submitLabel = 'Nạp vào kho!', pendingLabel = 'Đang nhét vào tủ...' }: Props) {
   const [state, formAction, isPending] = useActionState(action, undefined)
+  const { user } = useUser(false) // Don't redirect, just load
 
   return (
     <form action={formAction} className="space-y-8">
+      <input type="hidden" name="userId" value={user?.id || ''} />
       {/* Image Upload Area */}
       <div className="relative aspect-square w-full rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-muted/10 hover:bg-muted/20 transition-colors group cursor-pointer overflow-hidden">
         <input name="image" id="image" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer" />

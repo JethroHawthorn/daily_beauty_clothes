@@ -1,20 +1,47 @@
+'use client'
+
 import { getClothingItem, updateClothingItem } from '@/app/actions/wardrobe'
 import { ClothingItemForm } from '@/components/clothing-item-form'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState, use } from 'react'
+import { useUser } from '@/hooks/use-user'
 
 type Props = {
   params: Promise<{ id: string }>
 }
 
-export default async function EditClothingPage({ params }: Props) {
-  const { id } = await params
-  const item = await getClothingItem(id)
+export default function EditClothingPage({ params }: Props) {
+  const { id } = use(params)
+  const router = useRouter()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [item, setItem] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const { user } = useUser(true)
 
-  if (!item) {
-    notFound()
+  useEffect(() => {
+    if (!user) return
+
+    const fetchItem = async () => {
+      const data = await getClothingItem(id, user.id)
+      if (!data) {
+        router.push('/wardrobe') // Not found or not owned
+        return
+      }
+      setItem(data)
+      setIsLoading(false)
+    }
+    fetchItem()
+  }, [id, router, user])
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin text-4xl">🌸</div>
+      </div>
+    )
   }
 
   // Bind current ID to update action

@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { login } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +9,17 @@ import { Label } from '@/components/ui/label'
 
 export default function LoginPage() {
   const [state, action, isPending] = useActionState(login, undefined)
+  const router = useRouter()
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((state as any)?.success && (state as any)?.user) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const user = (state as any).user
+      localStorage.setItem('user', JSON.stringify(user))
+      router.push('/')
+    }
+  }, [state, router])
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 bg-background">
