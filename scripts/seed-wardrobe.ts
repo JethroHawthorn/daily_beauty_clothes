@@ -28,6 +28,7 @@ const COLORS = ['Đen', 'Trắng', 'Đỏ', 'Xanh dương', 'Xanh lá', 'Vàng',
 const MATERIALS = ['Cotton', 'Lụa', 'Denim', 'Da', 'Len', 'Linen', 'Polyester'];
 const SEASONS = ['Xuân', 'Hè', 'Thu', 'Đông'];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getRandomItem(arr: any[]) {
     return arr[Math.floor(Math.random() * arr.length)];
 }

@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation'
 import fs from 'fs'
 import path from 'path'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function addClothingItem(prevState: any, formData: FormData) {
   const session = await verifySession()
   if (!session) redirect('/login')
@@ -140,6 +141,7 @@ export async function getClothingItem(id: string) {
     return item
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateClothingItem(id: string, prevState: any, formData: FormData) {
     const session = await verifySession()
     if (!session) redirect('/login')

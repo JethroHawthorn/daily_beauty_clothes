@@ -12,6 +12,7 @@ const loginSchema = z.object({
   phoneNumber: z.string().min(10, 'Số điện thoại phải có ít nhất 10 số'),
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function login(prevState: any, formData: FormData) {
   const result = loginSchema.safeParse({
     phoneNumber: formData.get('phoneNumber'),
@@ -40,6 +41,7 @@ export async function login(prevState: any, formData: FormData) {
       phoneNumber: phoneNumber,
     })
     // Fetch again to be sure date is correct or just construct object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     user = { id: userId, phoneNumber, createdAt: new Date(), updatedAt: new Date() } as any
   }
 

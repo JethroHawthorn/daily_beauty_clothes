@@ -5,12 +5,24 @@ import { db } from '@/lib/db'
 import { clothingItems, histories } from '@/db/schema'
 import { verifySession } from '@/lib/session'
 import { getWeather } from '@/lib/weather'
-import { eq, desc, gte, and } from 'drizzle-orm'
+import { eq, gte, and } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { randomUUID } from 'crypto'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
+interface OutfitSuggestion {
+  items: string[];
+  reason: string;
+}
+
+interface WeatherData {
+  temp: number;
+  condition: string;
+  season: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateOutfit(prevState: any, formData: FormData) {
   const session = await verifySession()
   if (!session) redirect('/login')
@@ -42,7 +54,7 @@ export async function generateOutfit(prevState: any, formData: FormData) {
   
   const extremelyRecentItems = recentHistory
     .filter(h => h.date >= threeDaysAgoStr)
-    .flatMap(h => (h.combo as any).items || []);
+    .flatMap(h => (h.combo as OutfitSuggestion).items || []);
 
   const recentItemsString = extremelyRecentItems.join(', ');
 
@@ -148,7 +160,7 @@ export async function quickSuggest() {
         ),
         columns: { combo: true }
     })
-    const recentItems = recentHistory.flatMap(h => (h.combo as any).items || [])
+    const recentItems = recentHistory.flatMap(h => (h.combo as OutfitSuggestion).items || [])
     const recentItemsString = recentItems.join(', ');
 
     const weather = await getWeather()
@@ -210,7 +222,7 @@ export async function quickSuggest() {
     }
 }
 
-export async function saveToHistory(suggestion: any, weather: any, purpose: string) {
+export async function saveToHistory(suggestion: OutfitSuggestion, weather: WeatherData, purpose: string) {
     const session = await verifySession()
     if (!session) redirect('/login')
     
