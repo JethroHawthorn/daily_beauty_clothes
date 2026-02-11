@@ -11,4 +11,8 @@ export type Outfit = {
   bottom?: ClothingItem
   shoes?: ClothingItem
   outerwear?: ClothingItem
+  hat?: ClothingItem
+  glasses?: ClothingItem
+  mask?: ClothingItem
+  earrings?: ClothingItem
 }

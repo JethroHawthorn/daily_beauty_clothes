@@ -31,3 +31,14 @@ export async function uploadToCloudinary(file: File) {
     ).end(buffer);
   });
 }
+
+export async function deleteFromCloudinary(publicId: string) {
+  try {
+      const result = await cloudinary.uploader.destroy(publicId);
+      console.log(`Deleted image from Cloudinary: ${publicId}`, result);
+      return result;
+  } catch (error) {
+      console.error(`Failed to delete image from Cloudinary: ${publicId}`, error);
+      throw error;
+  }
+}

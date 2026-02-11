@@ -124,10 +124,24 @@ export async function generateOutfit(prevState: any, formData: FormData) {
     - Nhẹ nhàng, gợi mở ("Bạn thử kết hợp...", "Combo này khá hợp với...").
     - Giải thích CỰC KỲ NGẮN GỌN (1-2 câu), tập trung cảm giác thực tế.
  
-    Trả về JSON ONLY: { "selected_ids": ["ID_ITEM_1", "ID_ITEM_2"], "reason": "Lý do..." }
+    Trả về JSON ONLY theo cấu trúc sau:
+    {
+      "reason": "Lý do ngắn gọn...",
+      "items": ["Tên món 1", "Tên món 2"],
+      "outfit_ids": {
+        "top": "ID_ITEM_TOP",
+        "bottom": "ID_ITEM_BOTTOM",
+        "shoes": "ID_ITEM_SHOES",
+        "outerwear": "ID_ITEM_OUTERWEAR (nếu có)",
+        "hat": "ID_ITEM_HAT (nếu có)",
+        "glasses": "ID_ITEM_GLASSES (nếu có)",
+        "mask": "ID_ITEM_MASK (nếu có)",
+        "earrings": "ID_ITEM_EARRINGS (nếu có)"
+      }
+    }
   `
 
-  let resultJson: OutfitSuggestion | null = null;
+  let resultJson: any = null;
 
   if (!process.env.GEMINI_API_KEY) {
       return { error: "Thiếu cấu hình GEMINI_API_KEY" }
@@ -140,68 +154,38 @@ export async function generateOutfit(prevState: any, formData: FormData) {
     const text = response.text();
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     resultJson = JSON.parse(jsonText);
-    // Map back to DB items and categorize
-    const outfit: any = { top: undefined, bottom: undefined, shoes: undefined, outerwear: undefined };
 
-    // Helper to categorise
-    const categorizeItem = (type: string) => {
-        const t = type.toLowerCase();
-        if (['quần', 'pants', 'jeans', 'chân váy', 'skirt', 'short'].some(k => t.includes(k))) return 'bottom';
-        if (['áo', 'shirt', 't-shirt', 'blouse', 'croptop', 'top', 'váy', 'dress'].some(k => t.includes(k))) return 'top';
-        if (['giày', 'shoes', 'sneaker', 'boots', 'dép', 'sandal'].some(k => t.includes(k))) return 'shoes';
-        if (['khoác', 'jacket', 'coat', 'blazer', 'cardigan', 'vest'].some(k => t.includes(k))) return 'outerwear';
-        return 'other';
+    // Map back to DB items
+    const outfit: any = {};
+    const outfitIds = resultJson.outfit_ids || {};
+    
+    // Helper to find item by ID
+    const findItem = (id: string) => items.find(i => i.id === id);
+
+    if (outfitIds) {
+        Object.keys(outfitIds).forEach((key) => {
+            const id = outfitIds[key];
+            if (id) {
+                const item = findItem(id);
+                if (item) {
+                    outfit[key] = {
+                        id: item.id,
+                        name: item.name,
+                        imageUrl: item.imageUrl,
+                        color: item.color,
+                        type: item.type
+                    };
+                }
+            }
+        });
     }
 
-    if (resultJson) {
-         let selectedItems: typeof items = [];
-
-         // Strategy 1: Match by IDs (Preferred)
-         if (resultJson.selected_ids && Array.isArray(resultJson.selected_ids)) {
-             const selectedIds = resultJson.selected_ids;
-             selectedItems = items.filter(i => selectedIds.includes(i.id));
-         } 
-         // Strategy 2: Match by Name (Fallback)
-         else if (resultJson.items && Array.isArray(resultJson.items)) {
-             const normalizeName = (name: string) => name.toLowerCase().trim();
-             const jsonItems = resultJson.items;
-             jsonItems.forEach((suggestedName: string) => {
-                 const match = items.find(i => normalizeName(i.name) === normalizeName(suggestedName)) 
-                    || items.find(i => normalizeName(i.name).includes(normalizeName(suggestedName)));
-                 if (match) selectedItems.push(match);
-             });
-         }
-
-         // Populate Outfit & names
-         if (selectedItems.length > 0) {
-             resultJson.items = selectedItems.map(i => i.name); // Ensure names correspond to found items
-             
-             selectedItems.forEach(item => {
-                 const category = categorizeItem(item.type);
-                 if (category !== 'other' && !outfit[category]) {
-                     outfit[category] = {
-                         id: item.id,
-                         name: item.name,
-                         imageUrl: item.imageUrl,
-                         color: item.color,
-                         type: item.type
-                     };
-                 } else if (category === 'top' && outfit.top) {
-                      if (categorizeItem(item.type) === 'outerwear') {
-                          outfit.outerwear = {
-                             id: item.id,
-                             name: item.name,
-                             imageUrl: item.imageUrl,
-                             color: item.color,
-                             type: item.type
-                          }
-                      }
-                 }
-             });
-         }
-        
-        resultJson.outfit = outfit;
+    // Ensure items array exists for UI list, populated from the outfit selection
+    if (!resultJson.items || resultJson.items.length === 0) {
+        resultJson.items = Object.values(outfit).map((i: any) => i.name);
     }
+    
+    resultJson.outfit = outfit;
 
   } catch (e) {
       console.error("Gemini Error", e)
@@ -286,7 +270,21 @@ export async function quickSuggest(userId: string) {
     - ƯU TIÊN CAO sử dụng các món đồ [YÊU THÍCH].
     - CHỈ sử dụng đồ có trong Tủ đồ của người dùng.
     - Giải thích: Ngắn gọn, thân thiện (1 câu).
-    - Trả về JSON ONLY: { "items": ["Tên chính xác từ danh sách", "Tên chính xác 2"], "reason": "Lý do..." }
+    - Trả về JSON ONLY theo cấu trúc sau:
+      {
+        "reason": "Lý do ngắn gọn...",
+        "items": ["Tên món 1", "Tên món 2"],
+        "outfit_ids": {
+          "top": "ID_ITEM_TOP",
+          "bottom": "ID_ITEM_BOTTOM",
+          "shoes": "ID_ITEM_SHOES",
+          "outerwear": "ID_ITEM_OUTERWEAR (nếu có)",
+          "hat": "ID_ITEM_HAT (nếu có)",
+          "glasses": "ID_ITEM_GLASSES (nếu có)",
+          "mask": "ID_ITEM_MASK (nếu có)",
+          "earrings": "ID_ITEM_EARRINGS (nếu có)"
+        }
+      }
   `
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
@@ -295,6 +293,37 @@ export async function quickSuggest(userId: string) {
         const text = response.text();
         const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
         const resultJson = JSON.parse(jsonText);
+
+         // Map back to DB items
+         const outfit: any = {};
+         const outfitIds = resultJson.outfit_ids || {};
+         
+         const findItem = (id: string) => items.find(i => i.id === id);
+     
+         if (outfitIds) {
+             Object.keys(outfitIds).forEach((key) => {
+                 const id = outfitIds[key];
+                 if (id) {
+                     const item = findItem(id);
+                     if (item) {
+                         outfit[key] = {
+                             id: item.id,
+                             name: item.name,
+                             imageUrl: item.imageUrl,
+                             color: item.color,
+                             type: item.type
+                         };
+                     }
+                 }
+             });
+         }
+     
+         if (!resultJson.items || resultJson.items.length === 0) {
+             resultJson.items = Object.values(outfit).map((i: any) => i.name);
+         }
+         
+         resultJson.outfit = outfit;
+
         return { success: true, suggestion: resultJson, weather, purpose }
     } catch (e) {
         console.error("Gemini Error", e)

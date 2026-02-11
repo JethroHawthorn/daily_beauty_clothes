@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { quickSuggest, saveToHistory } from '@/app/actions/ai'
 import { Sparkles, Loader2, Check } from 'lucide-react'
+import { OutfitCanvasRenderer } from '@/components/outfit-canvas-renderer'
 
 import { useUser } from '@/hooks/use-user'
 
@@ -83,7 +84,15 @@ export function QuickAction() {
                     {result.weather.temp}°C - {result.purpose}
                   </span>
                 </div>
-                <ul className="list-disc list-inside space-y-1 ml-1">
+
+                {/* Outfit Visual */}
+                {result.suggestion.outfit && (
+                  <div className="mb-4">
+                    <OutfitCanvasRenderer outfit={result.suggestion.outfit} className="w-full max-w-[200px] mx-auto" />
+                  </div>
+                )}
+
+                <ul className="list-disc list-inside space-y-1 ml-1 text-sm">
                   {result.suggestion.items.map((item: string, i: number) => (
                     <li key={i} className="text-foreground/90">{item}</li>
                   ))}

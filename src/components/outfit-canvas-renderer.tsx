@@ -25,6 +25,10 @@ const PASTEL_COLORS: Record<string, string> = {
   bottom: "#AEC6CF",    // Pastel Blue
   shoes: "#FFE5B4",     // Pastel Peach
   outerwear: "#B39EB5", // Pastel Purple
+  hat: "#FFB7B2",       // Pastel Coral
+  glasses: "#B2EBF2",   // Pastel Cyan
+  mask: "#E1BEE7",      // Pastel Lavender
+  earrings: "#FFF176",  // Pastel Yellow
   default: "#E0E0E0",
 }
 

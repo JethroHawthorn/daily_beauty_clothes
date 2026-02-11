@@ -3,9 +3,10 @@
 import { db } from '@/lib/db'
 import { clothingItems } from '@/db/schema'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { randomUUID } from 'crypto'
 import { eq, desc, and, sql } from 'drizzle-orm'
-import { uploadToCloudinary } from '@/lib/cloudinary'
+import { uploadToCloudinary, deleteFromCloudinary } from '@/lib/cloudinary'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function addClothingItem(prevState: any, formData: FormData) {
@@ -20,6 +21,15 @@ export async function addClothingItem(prevState: any, formData: FormData) {
   const seasons = formData.getAll('season') as string[]
   const imageFile = formData.get('image') as File
 
+  const submittedValues = {
+    name,
+    type,
+    fit,
+    color,
+    material,
+    season: seasons,
+  }
+
   let imageUrl = ''
   if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
       try {
@@ -27,7 +37,10 @@ export async function addClothingItem(prevState: any, formData: FormData) {
         imageUrl = result.secure_url
       } catch (error) {
           console.error("Upload failed", error)
-          return { errors: { _form: "Upload ảnh thất bại: " + (error instanceof Error ? error.message : "Lỗi không xác định") } }
+          return {
+            errors: { _form: "Upload ảnh thất bại: " + (error instanceof Error ? error.message : "Lỗi không xác định") },
+            values: submittedValues
+          }
       }
   }
 
@@ -43,12 +56,15 @@ export async function addClothingItem(prevState: any, formData: FormData) {
         season: seasons,
         imageUrl,
      })
-     revalidatePath('/wardrobe')
-     return { success: true }
   } catch (e) {
       console.error(e)
-      return { errors: { _form: "Thêm món đồ thất bại" } }
+      return {
+        errors: { _form: "Thêm món đồ thất bại" },
+        values: submittedValues
+      }
   }
+  revalidatePath('/wardrobe')
+  redirect('/wardrobe')
 }
 
 export type WardrobeFilters = {
@@ -94,6 +110,52 @@ export async function getClothingItems(userId: string, filters?: WardrobeFilters
 
 export async function deleteClothingItem(id: string, userId: string) {
     if (!userId) return
+
+    // Get item to find image url
+    const item = await db.query.clothingItems.findFirst({
+        where: and(
+            eq(clothingItems.id, id),
+            eq(clothingItems.userId, userId)
+        )
+    })
+
+    if (!item) return
+
+    // Delete image from Cloudinary if exists
+    if (item.imageUrl) {
+        try {
+            // Extract public_id from secure_url (hacky but works for standard Cloudinary URLs)
+            // URL: https://res.cloudinary.com/demo/image/upload/v1614015026/sample.jpg
+            // Public ID: sample
+            const publicId = item.imageUrl.split('/').pop()?.split('.')[0]
+            if (publicId) {
+                // We added folder 'daily-beauty-clothes' in upload, so we need to include it?
+                // Actually the upload function result.public_id includes the folder.
+                // But we don't save public_id in DB, only url.
+                // We need to retrieve public_id or parse it from URL properly.
+                // Cloudinary URL format: .../upload/v<version>/<folder>/<id>.<ext>
+                // So we need to grab <folder>/<id>
+                
+                const parts = item.imageUrl.split('/');
+                const uploadIndex = parts.indexOf('upload');
+                if (uploadIndex !== -1 && parts.length > uploadIndex + 2) {
+                     // parts after 'upload' and version 'v...'
+                     // The version part usually starts with 'v', we can skip it.
+                     let publicIdParts = parts.slice(uploadIndex + 1);
+                     if (publicIdParts[0].startsWith('v')) {
+                         publicIdParts = publicIdParts.slice(1);
+                     }
+                     // Join remaining parts and remove extension
+                     const publicIdWithExt = publicIdParts.join('/');
+                     const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+                     
+                     await deleteFromCloudinary(publicId);
+                }
+            }
+        } catch (e) {
+            console.error("Failed to delete image from Cloudinary", e)
+        }
+    }
 
     // Ensure user owns the item
     await db.delete(clothingItems).where(
@@ -144,14 +206,46 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
     const seasons = formData.getAll('season') as string[]
     const imageFile = formData.get('image') as File
 
+    const submittedValues = {
+        name,
+        type,
+        fit,
+        color,
+        material,
+        season: seasons,
+    }
+
     let imageUrl = undefined // undefined means don't update
     if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
         try {
+            // Delete old image if exists
+            const currentItem = await db.query.clothingItems.findFirst({
+                where: and(eq(clothingItems.id, id), eq(clothingItems.userId, userId))
+            })
+            
+            if (currentItem?.imageUrl) {
+                // Logic to extract public_id
+                 const parts = currentItem.imageUrl.split('/');
+                 const uploadIndex = parts.indexOf('upload');
+                 if (uploadIndex !== -1 && parts.length > uploadIndex + 2) {
+                      let publicIdParts = parts.slice(uploadIndex + 1);
+                      if (publicIdParts[0].startsWith('v')) {
+                          publicIdParts = publicIdParts.slice(1);
+                      }
+                      const publicIdWithExt = publicIdParts.join('/');
+                      const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+                      await deleteFromCloudinary(publicId).catch(err => console.error("Failed to delete old image", err));
+                 }
+            }
+
             const result = await uploadToCloudinary(imageFile)
             imageUrl = result.secure_url
         } catch (error) {
             console.error("Upload failed", error)
-            return { errors: { _form: "Upload ảnh thất bại" } }
+            return {
+                errors: { _form: "Upload ảnh thất bại" },
+                values: submittedValues
+            }
         }
     }
 
@@ -170,10 +264,13 @@ export async function updateClothingItem(id: string, prevState: any, formData: F
                 eq(clothingItems.userId, userId)
             )
         )
-        revalidatePath('/wardrobe')
-        return { success: true }
     } catch (e) {
         console.error(e)
-        return { errors: { _form: "Cập nhật thất bại" } }
+        return {
+            errors: { _form: "Cập nhật thất bại" },
+            values: submittedValues
+        }
     }
+    revalidatePath('/wardrobe')
+    redirect('/wardrobe')
 }
