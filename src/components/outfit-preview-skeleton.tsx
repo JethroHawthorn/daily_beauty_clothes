@@ -93,15 +93,15 @@ function OutfitZone({
     )}>
       {item ? (
         <div className={cn(
-          "w-full h-full relative rounded-xl overflow-hidden shadow-sm bg-white/80 backdrop-blur-sm border border-white/40",
-          isOverlay && "bg-transparent border-none shadow-none"
+          "w-full h-full relative",
+          !item.imageUrl && !isOverlay && "rounded-xl overflow-hidden shadow-sm bg-white/80 backdrop-blur-sm border border-white/40"
         )}>
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
               alt={item.name}
               fill
-              className="object-contain p-1"
+              className="object-contain drop-shadow-sm"
               sizes="(max-width: 768px) 150px, 200px"
             />
           ) : (
